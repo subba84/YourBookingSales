@@ -1,0 +1,262 @@
+﻿
+
+
+@model SalesApplication.SalesEntry
+
+
+<div class="modal-header" style="background-color:darkgray">
+    <h4 class="modal-title">Edit Sales Details</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="form-horizontal2" id="divSalesDetails">
+        <div class="row">
+            <div class="col-md-8">
+                <section>
+                    <form id="frmEditSales" action="@Url.Action("SaveSalesDetails","SalesEntry",new { area = "SalesEntry"})" method="post" enctype="multipart/form-data">
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                <input type="hidden" id="hdnId" value="@Model.Id" name="Id" />
+                                <label class="control-label"> Name <span style="color:red"> *</span></label>
+                                <input type="text" id="txtName1" name="Name" value="@Model.Name" class="form-control errorMessage1" autocomplete="off" data-errormessage=" Please enter Name" />
+                            </div>
+                            <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                <label class="control-label"> Mobile <span style="color:red"> *</span></label>
+                                <input type="text" id="txtMobile" name="MobileNumber" value="@Model.MobileNumber" class="form-control errorMessage1" autocomplete="off" data-errormessage=" Please enter MobileNumber" />
+                            </div>
+                            <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                <label class="control-label"> Email</label>
+                                <input type="text" id="txtEmail" name="EmailId" value="@Model.EmailId" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                <label class="control-label"> State <span style="color:red"> *</span></label>
+                                <select class="form-control " name="StateId" id="lstState1" onchange="BindStateName1(this);">
+                                    <option value="0">select</option>
+                                    @if (DataCache.StateMasters != null && DataCache.StateMasters.Count > 0)
+                                    {
+                                        foreach (var item in DataCache.StateMasters)
+                                        {
+
+                                            if (@item.Id == Model.StateId)
+                                            {
+                                                <option value="@item.Id" selected>@item.StateName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.Id">@item.StateName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                                <input type="hidden" id="hdnState1" name="StateName" value="@Model.StateName" />
+                            </div>
+                            <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                <div class="form-group">
+                                    <label class="control-label"> City <span style="color:red"> *</span></label>
+                                    <select class="form-control" id="lstCity1" name="CityId" onchange="BindCityName1(this);">
+                                        <option value="0">select</option>
+                                        @{ var allCities = from s in DataCache.CityMasters where s.StateId == Model.StateId select s;
+                                            List<CityMaster> cities = allCities != null ? allCities.ToList() : null;
+                                        }
+                                        @if (cities != null && cities.Count > 0)
+                                        {
+                                            foreach (var item in cities)
+                                            {
+
+                                                if (item.Id == Model.CityId)
+                                                {
+                                                    <option value="@item.Id" selected>@item.CityName</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Id">@item.CityName</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                    <input type="hidden" id="hdnCity1" name="CityName" value="@Model.CityName" />
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                <label class="control-label"> Address <span style="color:red"> *</span></label>
+                                <textarea class="form-control errorMessage1" id="textAreaExample1" name="Address" rows="3" data-errormessage=" Please enter Address">@Model.Address</textarea>
+                            </div>
+                        </div>
+
+                        <div class="row" style="padding-top: 10px;">
+
+                            <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                <label class=" control-label"> Landmark</label>
+                                <input type="text" id="txtLandmark" name="Landmark" value="@Model.Landmark" class="form-control" autocomplete="off" />
+                            </div>
+                            <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+
+                                <label class=" control-label"> Service</label>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="radio" name="ServiceType" class="rdbService" checked value="Half">
+                                    </span>
+                                    <input type="text" class="form-control" value="Half">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <input type="radio" name="ServiceType" class="rdbService" value="Full">
+                                    </span>
+                                    <input type="text" class="form-control" value="Full">
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                <label class="control-label"> Label of Amount <span style="color:red"> *</span></label>
+                                <input type="text" id="txtLabelAmount" name="ServiceAmount" value="@Model.ServiceAmount" class="form-control errorMessage1" autocomplete="off" data-errormessage=" Please enter Amount" />
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-md-4 col-xs-12" style="padding-top: 10px;">
+                                <div>
+                                    <label>Transaction Id <span style="color:red"> *</span></label>
+                                </div>
+                                <div>
+                                    <input type="text" name="TransactionId" class="form-control errorMessage1" value="@Model.TransactionId" autocomplete="off" data-errormessage=" Please enter TransactionId" />
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-xs-12" style="padding-top: 10px;">
+                                <div>
+                                    <label>Paid via</label>
+                                </div>
+                                <div>
+                                    <input type="radio" class="rdbPaidVia" name="PaidType" value="Google Pay" checked />
+                                    <label>Google Pay</label>
+                                    <input type="radio" class="rdbPaidVia" name="PaidType" value="Phone Pay" />
+                                    <label>Phone Pay</label>
+                                    <input type="radio" class="rdbPaidVia" name="PaidType" value="Paytm" />
+                                    <label>Paytm</label>
+                                    <input type="radio" class="rdbPaidVia" name="PaidType" value="Others" />
+                                    <label>Others</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 col-xs-12" style="padding-top: 10px; display:none" id="divOthers1">
+                            <div>
+                                <label>Specifie Mode<span style="color:red"> *</span></label>
+                            </div>
+                            <div>
+                                <input type="text" id="txtOtherType1" name="OtherType" class="form-control" value="@Model.OtherType" autocomplete="off" />
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <input type="button" id="btnEdit" value="Submit" class="btn btn-primary" />
+    <input type="button" value="Close" class="btn btn-danger" data-dismiss="modal" />
+
+</div>
+@*<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>*@
+
+
+<script>
+
+    $(".rdbPaidVia").click(function () {
+        debugger;
+        if ($('#frmEditSales input:radio[name=PaidType]:checked').val() == "Others") {
+            $('#divOthers1').show();
+
+        }
+        else {
+            $('#divOthers1').hide();
+        }
+    });
+
+    $("#lstCity1").val("@Model.CityId");
+      //  $("#lstState1").val("@Model.StateId");
+
+
+    function BindCityName1(ths) {
+        debugger;
+        var value = $("#lstCity1 option:selected").text();
+        // alert(value);
+        $("#hdnCity1").val(value);
+    }
+    function BindStateName1(ths) {
+        debugger;
+        var value = $("#lstState1 option:selected").text();
+        // alert(value);
+        $.post("/SalesEntry/BindCity", { stateId: $("#lstState1").val() },
+            function (response) {
+                var cityList = '<option value="0"> Select </option>';
+                $.each(response.cities, function (data, value) {
+                    cityList += '<option value="' + value.Id + '">' + value.CityName + '</option>';
+                });
+                $("#lstCity1").html(cityList);
+                debugger;
+                $("#hdnState1").val(value);
+            });
+
+    }
+
+    $(document).ready(function () {
+        debugger;
+        $('input[name="PaidType"][value="' + "@Model.PaidType" + '"]').prop('checked', true);
+        $('input[name="ServiceType"][value="' + "@Model.ServiceType" + '"]').prop('checked', true);
+        if ($('#frmEditSales input:radio[name=PaidType]:checked').val() == "Others") {
+            $('#divOthers1').show();
+        }
+        else {
+            $('#divOthers1').hide();
+        }
+    });
+
+    $("#btnEdit").click(function () {
+        debugger;
+        var isValueEmpty = false; var errorMessage = "";
+        var employees = "";
+        $("#frmEditSales .errorMessage1").each(function () {
+            if ($(this).val() == null || $(this).val().trim() == "") {
+                isValueEmpty = true;
+                errorMessage = $(this).attr("data-errormessage");
+                return false;
+            }
+        });
+
+        //  alert($("#lstState").val());
+
+        if (isValueEmpty == true) {
+            Alert(errorMessage);
+            return false;
+        }
+        debugger;
+        var state = $("#lstState1").val();
+        if (state == 0) {
+
+            Alert("Please select State");
+            return false;
+        }
+        if ($("#lstCity1").val() == 0) {
+
+            Alert("Please select City");
+            return false;
+        }
+        if ($('#frmEditSales input:radio[name=PaidType]:checked').val() == "Others") {
+            if ($("#txtOtherType1").val() == null || $("#txtOtherType1").val().trim() == "") {
+                Alert("Please enter Type of Payment");
+                return false;
+            }
+
+        }
+        $("#frmEditSales").submit();
+        });
+</script>

@@ -1,0 +1,22 @@
+﻿@model TicketInfo
+<table border="1" style="border-collapse:collapse">
+    <tr><td colspan="2">Agent</td><td colspan="2"><b>@Model.OperatorName</b></td>
+        <td colspan="2">Agent Number</td><td colspan="2"><b>@Model.OperatorContactNumber</b></td></tr>
+    <tr><td colspan="2">Ticket/PNR Number</td><td colspan="6"><b>@Model.TicketNumber</b></td></tr>
+    <tr><td colspan="2">Bus Number</td><td colspan="2"><b>@Model.BusNumber</b></td>
+    <td colspan="2">Pickup Point</td><td colspan="2"><b>@Model.BoardingPoint</b></td></tr>
+    <tr><td colspan="2">Date of Journey</td><td colspan="2"><b>@Model.DepartureOn</b></td>
+        <td colspan="2">Departure Time</td><td colspan="2"><b>@Model.DepartureTime</b></td></tr>
+    <tr><td colspan="8"><b>Ticket Fare Details</b></td>    </tr>
+    <tr><td>Ticket Fare</td><td><b>@Model.TicketFare</b></td>
+                <td>GST</td><td><b>@Model.GST</b></td>
+        <td>Service Charge</td><td><b>@Model.ServiceCharge</b></td>
+        <td>Total Fare</td><td><b>@Model.TotalFare</b></td></tr>
+    <tr><td colspan="8"></td></tr>
+    <tr><td colspan="2">Passenger Name</td><td colspan="2">Age</td><td colspan="2">Gender</td><td colspan="2">Seat Number</td></tr>
+    <tr><td colspan="2"><b>@Model.Name</b></td>
+    <td colspan="2"><b>@Model.Age</b></td>
+    <td colspan="2"><b>@Model.Gender</b></td>
+        <td colspan="2"><b>@Model.SeatNumbers</b></td></tr></table>
+
+

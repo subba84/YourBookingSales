@@ -1,0 +1,223 @@
+﻿
+@model SalesApplication.SalesEntry
+
+
+    <div class="row">
+        @if (Model != null && Model.Invoice != null && Model.Invoice.InvoiceLineItems != null)
+        {
+            string imagePath = System.Configuration.ConfigurationManager.AppSettings["LogoPath"];
+            imagePath = imagePath + "//Images//DB_LOGO.png";
+            <table class="table" border="1" style="border-collapse:collapse;width:100%">
+                <thead>
+                    <tr>
+                        <th scope="col" colspan="11" style="text-align:center">DataBricks Technologies</th>
+                        <th scope="col" colspan="4" style="text-align:center">  <img style="height:50px;width:100px" src="@imagePath" /> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td scope="col" colspan="15" style="text-align:center">Invoice : @Model.Invoice.Id</td>
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="3" style="text-align:center">Company Address</td>
+                        <td scope="col" colspan="6" style="text-align:center">Hyderabad</td>
+                        <td scope="col" colspan="2" style="text-align:center">GSTIN:</td>
+                        <td scope="col" colspan="4" style="text-align:center">36AAIFD1660R1ZZ</td>
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="15" style="text-align:center">Customer Details</td>
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="2" style="text-align:center">Name</td>
+                        <td scope="col" colspan="7" style="text-align:center">@Model.Name</td>
+                        <td scope="col" colspan="3" style="text-align:center">POS</td>
+                        <td scope="col" colspan="3" style="text-align:center">Invoice#</td>
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="2" rowspan="3" style="text-align:center">Address</td>
+                        <td scope="col" colspan="7" style="text-align:center">@Model.CityName, @Model.StateName ,@Model.Address</td>
+                        <td scope="col" colspan="3" style="text-align:center">@Model.CityName</td>
+                        <td scope="col" colspan="3" style="text-align:center"> @Model.Invoice.Id</td>
+                    </tr>
+                    <tr>
+                        @*<td scope="col" colspan="2" style="text-align:center"></td>*@
+                        <td scope="col" colspan="7" style="text-align:center"></td>
+                        <td scope="col" colspan="3" style="text-align:center">GSTN</td>
+                        <td scope="col" colspan="3" style="text-align:center">Date</td>
+                    </tr>
+                    <tr>
+                        @*<td scope="col" colspan="2" style="text-align:center"></td>*@
+                        <td scope="col" colspan="7" style="text-align:center"></td>
+                        <td scope="col" colspan="3" style="text-align:center">@(Model.Invoice.OwnGSTNumber!=null? Model.Invoice.OwnGSTNumber : " --")</td>
+                        <td scope="col" colspan="3" style="text-align:center">@DateTime.Now</td>
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="3" style="text-align:center">Customer GSTN</td>
+                        <td scope="col" colspan="4" style="text-align:center">@(Model.Invoice.CompanyGSTId!=null? Model.Invoice.CompanyGSTId : " --")</td>
+                        <td scope="col" colspan="4" style="text-align:center">Customer PAN</td>
+                        <td scope="col" colspan="4" style="text-align:center">@(Model.PanNumber!=null? Model.PanNumber : " --")</td>
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="15" style="text-align:center">Product-wise Details:</td>
+                    </tr>
+                    <tr>
+                        <td scope="col" rowspan="2" style="text-align:center">SNo</td>
+                        <td scope="col" rowspan="2" colspan="2" style="text-align:center">Product Description</td>
+                        <td scope="col" rowspan="2" colspan="2" style="text-align:center">HSC/SAC Code</td>
+                        @*<td scope="col" rowspan="2" style="text-align:center">QTY</td>*@
+                        <td scope="col" rowspan="2" style="text-align:center">Unit</td>
+                        <td scope="col" rowspan="2" style="text-align:center">Rate</td>
+                        @*<td scope="col" rowspan="2" style="text-align:center">ToTal Sale</td>
+                        <td scope="col" rowspan="2" style="text-align:center">Desc.</td>*@
+                        <td scope="col" rowspan="2" colspan="2" style="text-align:center">Taxable Value</td>
+                        <td scope="col" colspan="2" rowspan="1" style="text-align:center">CGST</td>
+                        <td scope="col" colspan="2" rowspan="1" style="text-align:center">SGST</td>
+                        <td scope="col" colspan="2" rowspan="1" style="text-align:center">IGST</td>
+                    </tr>
+                    <tr>
+
+                        <td scope="col" colspan="1" rowspan="1" style="text-align:center">Rate%</td>
+                        <td scope="col" colspan="1" rowspan="1" style="text-align:center">Amount</td>
+                        <td scope="col" colspan="1" rowspan="1" style="text-align:center">Rate%</td>
+                        <td scope="col" colspan="1" rowspan="1" style="text-align:center">Amount</td>
+                        <td scope="col" colspan="1" rowspan="1" style="text-align:center">Rate%</td>
+                        <td scope="col" colspan="1" rowspan="1" style="text-align:center">Amount</td>
+
+                    </tr>
+
+
+
+                    <tr>
+                        <td scope="col" style="text-align:center">1</td>
+                        <td scope="col" colspan="2" style="text-align:center">Notification Service Credits<br />(Duration: @(DateTime.Now.ToShortDateString()) to @(Convert.ToDateTime(Model.ActivatedUpto).ToShortDateString() )</td>
+                        <td scope="col" colspan="2" style="text-align:center">998434</td>
+                        @*<td scope="col" style="text-align:center">1</td>*@
+                        <td scope="col" style="text-align:center">1</td>
+                        <td scope="col" style="text-align:center">@Model.Invoice.InvoiceLineItems[0].SalesAmount</td>
+                        @*<td scope="col" style="text-align:center">@Model.Invoice.InvoiceLineItems[0].SalesAmount</td>
+                        <td scope="col" style="text-align:center">0</td>*@
+                        <td scope="col" colspan="2" style="text-align:center">@Model.Invoice.InvoiceLineItems[0].SalesAmount</td>
+                        @if (Model.StateName == "Telangana")
+                        {
+                            <td scope="col" style="text-align:center">9%</td>
+                            <td scope="col" style="text-align:center">@(Convert.ToInt32(Model.Invoice.InvoiceLineItems[0].GSTAmount) /2)</td>
+                            <td scope="col" style="text-align:center">9%</td>
+                            <td scope="col" style="text-align:center">@(Convert.ToInt32(Model.Invoice.InvoiceLineItems[0].GSTAmount) /2)</td>
+                            <td scope="col" style="text-align:center">18%</td>
+                            <td scope="col" style="text-align:center">0</td>
+                        }
+                        else
+                        {
+                            <td scope="col" style="text-align:center">9%</td>
+                            <td scope="col" style="text-align:center">0</td>
+                            <td scope="col" style="text-align:center">9%</td>
+                            <td scope="col" style="text-align:center">0</td>
+                            <td scope="col" style="text-align:center">18%</td>
+                            <td scope="col" style="text-align:center">@(Model.Invoice.InvoiceLineItems[0].GSTAmount)</td>
+                        }
+                    </tr>
+
+
+
+                    <tr>
+                        <td scope="col" colspan="6" style="text-align:right"> Total</td>
+                        <td scope="col" style="text-align:center">@Model.Invoice.InvoiceLineItems[0].SalesAmount</td>
+                        @*<td scope="col" style="text-align:center">0</td>*@
+                        <td scope="col" colspan="2" style="text-align:center">@Model.Invoice.InvoiceLineItems[0].SalesAmount</td>
+                        <td scope="col" style="text-align:center"></td>
+                        @if (Model.StateName == "Telangana")
+                        {
+                            <td scope="col" style="text-align:center">@(Convert.ToInt32(Model.Invoice.InvoiceLineItems[0].GSTAmount) /2 )</td>
+                            <td scope="col" style="text-align:center"></td>
+                            <td scope="col" style="text-align:center">@(Convert.ToInt32(Model.Invoice.InvoiceLineItems[0].GSTAmount) /2)</td>
+                            <td scope="col" style="text-align:center"></td>
+                            <td scope="col" style="text-align:center">0</td>
+                        }
+                        else
+                        {
+                            <td scope="col" style="text-align:center">0</td>
+                            <td scope="col" style="text-align:center"></td>
+                            <td scope="col" style="text-align:center">0</td>
+                            <td scope="col" style="text-align:center"></td>
+                            <td scope="col" style="text-align:center">@(Convert.ToInt32(Model.Invoice.InvoiceLineItems[0].GSTAmount))</td>
+                        }
+
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="8" style="text-align:center"> Remarks:</td>
+                        <td scope="col" colspan="5" style="text-align:center"> Summary:</td>
+                        <td scope="col" colspan="2" style="text-align:center"> Amount</td>
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="8" rowspan="2">remarks</td>
+                        <td scope="col" colspan="5" style="text-align:center"> Total Invoice Value</td>
+                        <td scope="col" colspan="2" style="text-align:center"> @Model.Invoice.TotalAmount</td>
+
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="5" style="text-align:center">Total Discount</td>
+                        <td scope="col" colspan="2" style="text-align:center"> 0</td>
+                    </tr>
+                    <tr>
+                        <td colspan="8" rowspan="3"> </td>
+                        <td scope="col" colspan="5" style="text-align:center">Total Taxable Value</td>
+                        <td scope="col" colspan="2" style="text-align:center"> @(Convert.ToInt32(Model.Invoice.InvoiceLineItems[0].SalesAmount))</td>
+
+
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="5" style="text-align:center">CGST</td>
+                        @if (Model.StateName == "Telangana")
+                        {
+                            <td scope="col" colspan="2" style="text-align:center"> @(Convert.ToInt32(Model.Invoice.InvoiceLineItems[0].GSTAmount)/2)</td>
+
+                        }
+                        else
+                        {
+                            <td scope="col" colspan="2" style="text-align:center"> 0</td>
+                        }
+
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="5" style="text-align:center">SGST</td>
+                        @if (Model.StateName == "Telangana")
+                        {
+                            <td scope="col" colspan="2" style="text-align:center"> @(Convert.ToInt32(Model.Invoice.InvoiceLineItems[0].GSTAmount)/2)</td>
+
+                        }
+                        else
+                        {
+                            <td scope="col" colspan="2" style="text-align:center"> 0</td>
+                        }
+                    </tr>
+                    <tr>
+                        <td colspan="8" rowspan="2" style="text-align:center"> Signature</td>
+                        <td scope="col" colspan="5" style="text-align:center">IGST</td>
+                        @if (Model.StateName == "Telangana")
+                        {
+                            <td scope="col" colspan="2" style="text-align:center"> 0</td>
+
+                        }
+                        else
+                        {
+                            <td scope="col" colspan="2" style="text-align:center">  @(Convert.ToInt32(Model.Invoice.InvoiceLineItems[0].GSTAmount))</td>
+                        }
+
+                    </tr>
+                    <tr>
+                        <td scope="col" colspan="5" style="text-align:center">Grand Total</td>
+                        <td scope="col" colspan="2" style="text-align:center"> @Model.Invoice.TotalAmount</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div>
+                <p> <b>* This is electronically genarated Copy</b></p>
+            </div>
+        }
+
+
+    </div>
+
+
+

@@ -1,0 +1,104 @@
+﻿
+
+
+@model CityMaster
+
+<div class="col-md-2 col-xs-12" style="padding-right: 10px;">
+    <label class=" control-label"> State Name <span style="color:red"> * </span></label>
+
+    <select class="form-control errorMessage" name="StateId" id="lstState" onchange="BindStateName(this);">
+        <option value="0">Select</option>
+        @if (DataCache.StateMasters != null && DataCache.StateMasters.Count > 0)
+        {
+            foreach (var item in DataCache.StateMasters)
+            {
+
+                if (@item.Id == Model.StateId)
+                {
+                    <option value="@item.Id" selected>@item.StateName</option>
+                }
+                else
+                {
+                    <option value="@item.Id">@item.StateName</option>
+                }
+
+            }
+        }
+    </select>
+    <input type="hidden" id="hdnStateName" name="StateName" value="@Model.StateName" />
+    <input type="hidden" id="hdnCityId" name="Id" value="@Model.Id" />
+</div>
+
+<div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+    <label class=" control-label"> City Name <span style="color:red"> * </span></label>
+    <input type="text" id="txtCityName" name="CityName" value="@Model.CityName" class="form-control errorMessage" data-errormessage=" Please enter Email Address" />
+</div>
+<div class="col-md-2 col-xs-12" style="padding-right: 10px;">
+
+    <label class="control-label"> </label>
+    <input type="button" value="Clear" id="btnClear" class="btn btn-danger form-control" />
+
+</div>
+<div class="col-md-2 col-xs-12" style="padding-right: 10px;">
+
+    <label class="control-label"> </label>
+    <input type="button" value="Save" id="btnSaveCity" class="btn btn-primary form-control" />
+
+</div>
+
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+<script>
+    $("#btnSaveCity").click(function () {
+
+        var isValueEmpty = false; var errorMessage = "";
+        var employees = "";
+        $(".errorMessage").each(function () {
+
+            if ($(this).val() == null || $(this).val() == "") {
+                isValueEmpty = true;
+                errorMessage = $(this).attr("data-errormessage");
+                return false;
+            }
+        });
+        if ($("#lstState option:selected").val() == 0) {
+            isValueEmpty = true;
+            errorMessage = "Please select State";
+            return false;
+        }
+        if (isValueEmpty == true) {
+            Alert(errorMessage);
+            return false;
+        }
+        $("#frmCity").submit();
+    });
+
+    $("#btnClear").click(function () {
+        $("#lstState").val('0');
+        $("#hdnStateName").val("");
+        $("#txtCityName").val("");
+        $("#hdnCityId").val(0);
+    });
+
+    function BindStateName() {
+        var value = $("#lstState option:selected").text();
+        if ($("#lstState option:selected").val() != 0) {
+            $("#hdnStateName").val(value);
+        }
+        else {
+            $("#hdnStateName").val("");
+        }
+
+    }
+
+    function EditState(id) {
+        $.post("/CityMaster/GetCityDetailsById", { id: id }, function (response) {
+            $("#divCityData").html(response.partialview);
+        });
+    }
+
+</script>

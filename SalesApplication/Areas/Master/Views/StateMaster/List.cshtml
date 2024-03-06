@@ -1,0 +1,129 @@
+﻿@model StateMaster
+ 
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+
+                <div class="card-body">
+                    <div class="col-sm-6">
+                        <h4>State Master</h4>
+                    </div> 
+                    <form id="frmState" action="@Url.Action("Edit","StateMaster",new { area = "Master"})" method="post" enctype="multipart/form-data">
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                <label class="control-label"> State Name <span style="color:red"> *</span></label>
+                                <input type="text" id="txtState" name="StateName" class="form-control errorMessage" data-errormessage=" Please enter State Name" />
+                            </div>
+                            <div class="col-md-2 col-xs-12" style="padding-right: 10px;">
+                                <label class="control-label"> </label>
+                                <input type="button" value="Save" id="btnStateSave" class="btn btn-primary form-control" />
+                            </div>
+                        </div>
+                    </form>
+
+                    <div style="padding-top: 10px;">
+                        <table class="table table-bordered" id="tblStates">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">SNo</th>
+                                    <th scope="col">State Name</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">CreatedOn</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.StatesList != null && Model.StatesList.Count() > 0)
+                                {
+                                    int i = 1;
+                                    foreach (var item in Model.StatesList)
+                                    {
+                                        <tr>
+                                            <td> @i  </td>
+                                            <td> @item.StateName  </td>
+                                            <td> @(item.IsActive==true?" Active " : "InActive" )</td>
+                                            <td>@(item.CreatedOn!=null?Convert.ToDateTime(item.CreatedOn).ToShortDateString():" -- ")  </td>
+                                            <td>
+                                                <span class="fa-pencil"><a href="#" class="fa fa-pen-alt bigger-130" onclick="EditState('@item.Id')">Edit</a></span>
+                                                @* |<span class="fa-pencil"><a href="#" class="fa fa-pen-alt bigger-130" onclick="DeleteEmployee('@item.Id')">Delete</a></span>*@
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="10"> no records..</td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- jQuery -->
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+ 
+
+<div class="modal fade" id="StateAddmodal">
+    <div class="modal-dialog modal-l"  >
+        <div class="modal-content" id="divEditState">
+
+        </div>
+    </div>
+</div>
+
+ 
+
+<script>
+    $(function () {
+        $("#tblStates").dataTable();
+    });
+</script>
+
+
+<script>
+    if ("@TempData["Notification"]" != null && "@TempData["Notification"]" != "") {
+            $("#notificationPopup").modal('show');
+        }
+
+        $("#btnNotificationOk").click(function () {
+            $("#notificationPopup").modal('hide');
+        });
+</script>
+
+<script>
+
+    $("#btnStateSave").click(function () {
+        debugger;
+        if ($("#txtState").val() == null || $("#txtState").val() == "") {
+            Alert("Please enter State");
+            return false;
+        }
+        $("#frmState").submit();
+    });
+
+    function EditState(id) {
+
+        $.post("/StateMaster/GetStateDetailsById", { id: id }, function (response) {
+            $("#divEditState").html(response.partialview);
+            $("#StateAddmodal").modal('show');
+        });
+    }
+  
+</script>

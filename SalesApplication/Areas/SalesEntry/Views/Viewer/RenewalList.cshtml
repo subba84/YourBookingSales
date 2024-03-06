@@ -1,0 +1,128 @@
+﻿@model SalesApplication.SalesEntry
+
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<section class="content">
+    <div class="row">
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Remewal List</h3>
+                    <table class="table table-bordered table-responsive" id="tblViewer">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Mobile Number</th>
+                                <th scope="col">State</th>
+                                <th scope="col">City</th>
+                                <th scope="col">Service Amount</th>
+                                <th scope="col">Paid Type</th>
+                                <th scope="col">Created By</th>
+                                <th scope="col">Created On</th>
+                                <th scope="col">ActivatedUpto</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.RenewalHistoryList != null && Model.RenewalHistoryList.Count() > 0)
+                            {
+
+                                foreach (var item in Model.RenewalHistoryList)
+                                {
+                                    <tr>
+                                        <td> @item.Name  </td>
+                                        <td> @item.MobileNumber  </td>
+                                        <td> @item.StateName  </td>
+                                        <td> @item.CityName  </td>
+                                        <td> @item.ServiceAmount  </td>  
+                                        <td> @item.PaidType  </td>
+                                        @*<td> @item.ServiceType  </td>
+                                            <td> @item.PaidType  </td>
+                                            <td> @item.ServiceAmount  </td>*@
+                                        <td> @item.CreatedByName  </td>
+                                        <td> @(item.CreatedOn!=null?Convert.ToDateTime(item.CreatedOn).ToShortDateString():"--") </td> 
+                                        <td> @(item.ActivatedUpto != null?Convert.ToDateTime(item.ActivatedUpto).ToShortDateString():" -- ") </td>
+
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="13"> no records..</td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card -->
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables -->
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+<div class="modal fade" id="ViewerRenewalSaleslmodal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header" style="background-color:darkgray">
+                <h4 class="modal-title"> Renewal Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal2" id="divViewerSales">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Close" class="btn btn-warning" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#tblViewer").dataTable();
+    });
+</script>
+
+<script>
+
+    //function ViewerSaleDetails(id) {
+
+    //    $.post("/SalesEntry/ViewSaleDetailsById", { id: id }, function (response) {
+    //        $("#divViewerSales").html(response.partialview);
+    //        $("#ViewerSaleslmodal").modal('show');
+    //    });
+
+    //}
+
+
+</script>
+
+
+

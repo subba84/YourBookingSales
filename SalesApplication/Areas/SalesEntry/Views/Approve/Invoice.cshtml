@@ -1,0 +1,161 @@
+﻿@model SalesApplication.SalesEntry
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<section class="content">
+    <div class="row">
+
+        <table class="table" border="1">
+            <thead>
+                <tr>
+                    <th scope="col" colspan="13" style="text-align:center">Company Name</th>
+                    <th scope="col" colspan="2" style="text-align:center">Logo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td scope="col" colspan="15" style="text-align:center">Invoice</td>
+                </tr>
+                <tr>
+                    <td scope="col" colspan="10" style="text-align:center">Company Address</td>
+                    <td scope="col" colspan="2" style="text-align:center">GSTIN:</td>
+                    <td scope="col" colspan="3" style="text-align:center">GSTIN</td>
+                </tr>
+                <tr>
+                    <td scope="col" colspan="15" style="text-align:center">Customer Details</td>
+                </tr>
+                <tr>
+                    <td scope="col" colspan="2" style="text-align:center">Name</td>
+                    <td scope="col" colspan="7" style="text-align:center">Name</td>
+                    <td scope="col" colspan="3" style="text-align:center">POS</td>
+                    <td scope="col" colspan="3" style="text-align:center">Invoice#</td>
+                </tr>
+                <tr>
+                    <td scope="col" colspan="2" rowspan="3" style="text-align:center">Address</td>
+                    <td scope="col" colspan="7" style="text-align:center">@Model.CityName, @Model.StateName ,@Model.Address</td>
+                    <td scope="col" colspan="3" style="text-align:center">@Model.CityName</td>
+                    <td scope="col" colspan="3" style="text-align:center">@Model.InvoiceNumber</td>
+                </tr>
+                <tr>
+                    @*<td scope="col" colspan="2" style="text-align:center"></td>*@
+                    <td scope="col" colspan="7" style="text-align:center"></td>
+                    <td scope="col" colspan="3" style="text-align:center">GSTN</td>
+                    <td scope="col" colspan="3" style="text-align:center">Date</td>
+                </tr>
+                <tr>
+                    @*<td scope="col" colspan="2" style="text-align:center"></td>*@
+                    <td scope="col" colspan="7" style="text-align:center"></td>
+                    <td scope="col" colspan="3" style="text-align:center">GSTN</td>
+                    <td scope="col" colspan="3" style="text-align:center">@DateTime.Now</td>
+                </tr>
+                <tr>
+                    <td scope="col" colspan="3" style="text-align:center">Customer GSTN</td>
+                    <td scope="col" colspan="4" style="text-align:center">Customer GSTN</td>
+                    <td scope="col" colspan="4" style="text-align:center">Customer PAN</td>
+                    <td scope="col" colspan="4" style="text-align:center">Customer PAN</td>
+                </tr>
+                <tr>
+                    <td scope="col" colspan="15" style="text-align:center">Product-wise Details:</td>
+                </tr>
+                <tr>
+                    <td scope="col" rowspan="2" style="text-align:center">SNo</td>
+                    <td scope="col" rowspan="2" style="text-align:center">Product Description</td>
+                    <td scope="col" rowspan="2" style="text-align:center">HSC/SAC Code</td>
+                    <td scope="col" rowspan="2" style="text-align:center">QTY</td>
+                    <td scope="col" rowspan="2" style="text-align:center">Unit</td>
+                    <td scope="col" rowspan="2" style="text-align:center">Rate</td>
+                    <td scope="col" rowspan="2" style="text-align:center">ToTal Sale</td>
+                    <td scope="col" rowspan="2" style="text-align:center">Desc.</td>
+                    <td scope="col" rowspan="2" style="text-align:center">Taxable Value</td>
+                    <td scope="col" colspan="2" rowspan="1" style="text-align:center">CGST</td>
+                    <td scope="col" colspan="2" rowspan="1" style="text-align:center">SGST</td>
+                    <td scope="col" colspan="2" rowspan="1" style="text-align:center">IGST</td>
+                </tr>
+                <tr>
+
+                    <td scope="col" colspan="1" rowspan="1" style="text-align:center">Rate%</td>
+                    <td scope="col" colspan="1" rowspan="1" style="text-align:center">Amount</td>
+                    <td scope="col" colspan="1" rowspan="1" style="text-align:center">Rate%</td>
+                    <td scope="col" colspan="1" rowspan="1" style="text-align:center">Amount</td>
+                    <td scope="col" colspan="1" rowspan="1" style="text-align:center">Rate%</td>
+                    <td scope="col" colspan="1" rowspan="1" style="text-align:center">Amount</td>
+
+                </tr>
+                <tr>
+                    <td scope="col" style="text-align:center">1</td>
+                    <td scope="col" style="text-align:center">Sale</td>
+                    <td scope="col" style="text-align:center">998434</td>
+                    <td scope="col" style="text-align:center">1</td>
+                    <td scope="col" style="text-align:center">1</td>
+                    <td scope="col" style="text-align:center">1000</td>
+                    <td scope="col" style="text-align:center">1000</td>
+                    <td scope="col" style="text-align:center">0</td>
+                    <td scope="col" style="text-align:center">0</td>
+                    <td scope="col" style="text-align:center">9%</td>
+                    <td scope="col" style="text-align:center">90</td>
+                    <td scope="col" style="text-align:center">9%</td>
+                    <td scope="col" style="text-align:center">90</td>
+                    <td scope="col" style="text-align:center">18%</td>
+                    <td scope="col" style="text-align:center">180</td>
+                </tr>
+                <tr>
+                    <td scope="col" colspan="6" style="text-align:right"> Total</td>
+                    <td scope="col" style="text-align:center">1000</td>
+                    <td scope="col" style="text-align:center">0</td>
+                    <td scope="col" style="text-align:center">0</td>
+                    <td scope="col" style="text-align:center"></td>
+                    <td scope="col" style="text-align:center">90</td>
+                    <td scope="col" style="text-align:center"></td>
+                    <td scope="col" style="text-align:center">90</td>
+                    <td scope="col" style="text-align:center"></td>
+                    <td scope="col" style="text-align:center">0</td>
+                </tr>
+                <tr>
+                    <td scope="col" colspan="8" style="text-align:center"> Remarks:</td>
+                    <td scope="col" colspan="5" style="text-align:center"> Summary:</td>
+                    <td scope="col" colspan="2" style="text-align:center"> Amount</td>
+                </tr>
+                <tr>
+                    <td scope="col" colspan="8" rowspan="2">remarks</td>
+                    <td scope="col" colspan="5" style="text-align:center"> Total Ivoice Value</td>
+                    <td scope="col" colspan="2" style="text-align:center"> 1000</td>
+
+                </tr>
+                <tr>
+                    <td scope="col" colspan="5" style="text-align:center">Total Discount</td>
+                    <td scope="col" colspan="2" style="text-align:center"> 0</td>
+                </tr>
+                <tr>
+                    <td colspan="8" rowspan="3"> </td>
+                    <td scope="col" colspan="5" style="text-align:center">Total Taxable Value</td>
+                    <td scope="col" colspan="2" style="text-align:center"> 0</td>
+
+
+                </tr>
+                <tr>
+                    <td scope="col" colspan="5" style="text-align:center">CGST</td>
+                    <td scope="col" colspan="2" style="text-align:center"> 90</td>
+                </tr>
+                <tr>
+                    <td scope="col" colspan="5" style="text-align:center">SGST</td>
+                    <td scope="col" colspan="2" style="text-align:center"> 90</td>
+                </tr>
+                <tr>
+                    <td colspan="8" rowspan="2" style="text-align:center"> Signature</td>
+                    <td scope="col" colspan="5" style="text-align:center">IGST</td>
+                    <td scope="col" colspan="2" style="text-align:center"> 0</td>
+
+                </tr>
+                <tr>
+                    <td scope="col" colspan="5" style="text-align:center">Grand Total</td>
+                    <td scope="col" colspan="2" style="text-align:center"> 1180</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</section>
+

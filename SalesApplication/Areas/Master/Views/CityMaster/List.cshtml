@@ -1,0 +1,176 @@
+﻿
+
+@model CityMaster
+@{
+    ViewBag.Title = "List";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                       
+                        <form id="frmCity" action="@Url.Action("Edit","CityMaster",new { area = "Master"})" method="post" enctype="multipart/form-data">
+                            <div class="col-sm-6">
+                                <h4>City Master</h4>
+                            </div>
+                            <div class="row" style="padding-top: 10px;" id="divCityData">
+                                <div class="col-md-2 col-xs-12" style="padding-right: 10px;">
+                                    <label class=" control-label"> State Name <span style="color:red"> * </span></label>
+
+                                    <select class="form-control errorMessage" name="StateId" id="lstState" onchange="BindStateName(this);">
+                                        <option value="0">Select</option>
+                                        @if (DataCache.StateMasters != null && DataCache.StateMasters.Count > 0)
+                                        {
+                                            foreach (var item in DataCache.StateMasters)
+                                            {
+
+                                                if (@item.Id == Model.StateId)
+                                                {
+                                                    <option value="@item.Id" selected>@item.StateName</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Id">@item.StateName</option>
+                                                }
+
+                                            }
+                                        }
+                                    </select>
+                                    <input type="hidden" id="hdnStateName" name="StateName" value="@Model.StateName" />
+                                    <input type="hidden" id="hdnStateId" name="Id" value="@Model.Id" />
+                                </div>
+
+                                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                    <label class=" control-label"> City Name <span style="color:red"> * </span></label>
+                                    <input type="text" id="txtCityName" name="CityName" value="@Model.CityName" class="form-control errorMessage" data-errormessage=" Please enter Email Address" />
+                                </div>
+                                <div class="col-md-2 col-xs-12" style="padding-right: 10px;">
+
+                                    <label class="control-label"> </label>
+                                    <input type="button" value="Clear" id="btnClear" class="btn btn-danger form-control" />
+
+                                </div>
+                                <div class="col-md-2 col-xs-12" style="padding-right: 10px;">
+
+                                    <label class="control-label"> </label>
+                                    <input type="button" value="Save" id="btnSaveCity" class="btn btn-primary form-control" />
+
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="row" style="padding-top: 10px;">
+                            @*<h3>City List</h3>*@
+                        </div>
+                        
+                            <table class="table table-bordered" id="tblCity" style="padding-top: 10px;">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">SNo</th>
+                                        <th scope="col">City Name</th>
+                                        <th scope="col">State Name</th>
+                                        <th scope="col">CreatedOn</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.CityList != null && Model.CityList.Count() > 0)
+                                    {
+                                        int i = 1;
+                                        foreach (var item in Model.CityList)
+                                        {
+                                            <tr>
+                                                <td> @i  </td>
+                                                <td> @item.CityName  </td>
+                                                <td> @item.StateName  </td>
+                                                <td>@(item.CreatedOn!=null?Convert.ToDateTime(item.CreatedOn).ToShortDateString():" -- ")  </td>
+                                                <td> @(item.IsActive==true?" Active " : "InActive" )</td>
+                                                <td>
+                                                    <span class="fa-pencil"><a href="#" class="fa fa-pen-alt bigger-130" onclick="EditState('@item.Id')">Edit</a></span>
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="10"> no records..</td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                            </table>
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> 
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+
+<script>
+    $(function () {
+        $("#tblCity").dataTable();
+    });
+</script>
+
+<script>
+    $("#btnSaveCity").click(function () {
+        var isValueEmpty = false; var errorMessage = "";
+        var employees = "";
+        $(".errorMessage").each(function () {
+
+            if ($(this).val() == null || $(this).val() == "") {
+                isValueEmpty = true;
+                errorMessage = $(this).attr("data-errormessage");
+                return false;
+            }
+        });
+        if ($("#lstState option:selected").val() == 0) {
+            isValueEmpty = true;
+            errorMessage = "Please select State";
+            return false;
+        }
+        if (isValueEmpty == true) {
+            Alert(errorMessage);
+            return false;
+        }
+        $("#frmCity").submit();
+    });
+
+    $("#btnClear").click(function () {
+
+        $("#lstState").val('0');
+        $("#hdnStateName").val("");
+        $("#txtCityName").val("");
+        $("#hdnCityId").val(0);
+    });
+
+    function BindStateName() {
+        var value = $("#lstState option:selected").text();
+        if ($("#lstState option:selected").val() != 0) {
+            $("#hdnStateName").val(value);
+        }
+        else {
+            $("#hdnStateName").val("");
+        }
+    }
+
+    function EditState(id) {
+        $.post("/CityMaster/GetCityDetailsById", { id: id }, function (response) {
+            $("#divCityData").html(response.partialview);
+        });
+    }
+
+</script>

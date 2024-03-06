@@ -1,0 +1,573 @@
+﻿@model SalesApplication.SalesEntry
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //string smsCharges = SMSPrice.SMSCharges;
+}
+
+<section class="content">
+    <div class="row">
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Sales List</h3>
+                    <div style="text-align:right">
+                        <input type="button" class="btn btn-success m-2" value="Add New" style="" onclick="AddNewSales()" @*data-toggle="modal" data-target="#SalesAddmodal"*@ />
+                    </div>
+
+                    <table class="table table-bordered" id="tblSales" style="padding-right: 10px;">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Mobile Number</th>
+                                <th scope="col">State</th>
+                                <th scope="col">City</th>
+                                <th scope="col">Label of Amount</th>
+                                <th scope="col">SMS Pack</th>
+                                <th scope="col">GST Amount</th> 
+                                <th scope="col">Total Amount</th>
+                                <th scope="col">Paid Type</th>
+                                <th scope="col">Created By</th>
+                                <th scope="col">Created On</th>
+                                <th scope="col">Activation Key</th>
+                                <th scope="col">Activation Upto</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">View</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.salesList != null && Model.salesList.Count() > 0)
+                            {
+                                foreach (var item in Model.salesList)
+                                {
+                            <tr>
+                                <td> @item.Name  </td>
+                                <td> @item.MobileNumber  </td>
+                                <td> @item.StateName  </td>
+                                <td> @item.CityName  </td>
+                                <td> @item.ServiceAmount  </td>
+                                <td> @(item.SMSPack=="Yes"?"Yes":"No" ) </td>
+                                <td> @item.TotalGSTAmount  </td>
+                                <td> @item.TotalAmount  </td>
+                                <td> @item.PaidType  </td>
+                                @*<td> @item.ServiceAmount  </td>*@
+                                <td> @item.CreatedByName  </td>
+                                <td> @(item.CreatedOn!=null?Convert.ToDateTime(item.CreatedOn).ToShortDateString():"--") </td>
+                                <td> @(item.ActivationKey!=null? item.ActivationKey:"--") </td>
+                                <td> @(item.ActivatedUpto != null?Convert.ToDateTime(item.ActivatedUpto).ToShortDateString():" -- ") </td>
+                                <td> @item.StatusName  </td>
+                                <td> <a class="fa fa-street-view" onclick="ViewSaleDetails(@item.Id)">View</a> </td>
+                                @if (item.StatusId == SaleStatus.Reject || item.StatusId == SaleStatus.Save)
+                                {
+                                    <td> <span class="fa fa-user-edit" onclick="EditSaleDetails(@item.Id)"><a>Edit</a></span> </td>
+
+                                }
+                                else
+                                {
+                                    <td> <span class="fa"> Edit </span> </td>
+                                }
+                            </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="14"> no records..</td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+
+<!-- jQuery -->
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables -->
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+
+
+
+@*style="width:900px; height:auto"*@
+<div class="modal fade" id="SalesAddmodal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:darkgray">
+                <h4 class="modal-title">Enter Sales Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal2" id="divSalesDetails">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section>
+                                <form id="frmSales" action="@Url.Action("SaveSalesDetails","SalesEntry",new { area = "SalesEntry"})" method="post" enctype="multipart/form-data">
+                                    <div class="row" style="padding-top: 10px;">
+                                        <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                                            <label class="control-label"> Name <span style="color:red"> *</span></label>
+                                            <input type="text" id="txtName" name="Name" class="form-control errorMessage" autocomplete="off" data-errormessage=" Please enter Name" />
+                                        </div>
+                                        <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                                            <label class="control-label"> Mobile <span style="color:red"> *</span></label>
+                                            <input type="text" id="txtMobile" name="MobileNumber" class="form-control errorMessage" autocomplete="off" data-errormessage=" Please enter MobileNumber" />
+                                        </div>
+                                        <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                                            <label class="control-label"> Email</label>
+                                            <input type="text" id="txtEmail" name="EmailId" autocomplete="off" class="form-control" />
+                                        </div>
+                                        <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                                            <label class="control-label"> PAN Number</label>
+                                            <input type="text" id="txtPanNumber" name="PANNumber" autocomplete="off" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 10px;">
+                                        <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                            <label class="control-label"> State <span style="color:red"> *</span></label>
+                                            <select class="form-control  " name="StateId" id="lstState" onchange="BindStateName(this);">
+                                                <option value="0">Select</option>
+                                                @if (DataCache.StateMasters != null && DataCache.StateMasters.Count > 0)
+                                                {
+                                                    foreach (var item in DataCache.StateMasters)
+                                                    {
+
+                                                        if (@item.Id == Model.StateId)
+                                                        {
+                                                            <option value="@item.Id" selected>@item.StateName</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Id">@item.StateName</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                            <input type="hidden" id="hdnState" name="StateName" />
+                                        </div>
+                                        <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                            <div class="form-group">
+                                                <label class="control-label"> City <span style="color:red"> *</span></label>
+                                                <select class="form-control  " id="lstCity" name="CityId" onchange="BindCityName(this);">
+                                                    <option value="0">select</option>
+                                                    <option value="1">Guntur</option>
+                                                    <option value="2">Vijayawada</option>
+                                                    <option value="3">Vizag</option>
+                                                    <option value="4">Hyderabad</option>
+                                                    <option value="5">Khammam</option>
+                                                </select>
+                                                <input type="hidden" id="hdnCity" name="CityName" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                            <label class="control-label"> Address <span style="color:red"> *</span></label>
+                                            <textarea class="form-control errorMessage" id="textAreaExample1" name="Address" rows="3" data-errormessage=" Please enter Address"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="padding-top: 10px;">
+
+                                        <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                                            <label class=" control-label"> Landmark</label>
+                                            <input type="text" id="txtLandmark" name="Landmark" class="form-control" autocomplete="off" />
+                                        </div>
+                                        <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                                            <label class="control-label"> Label of Amount <span style="color:red"> *</span></label>
+                                            <input  type="hidden" name="SalesGST" id="hdnServiceGST"/>
+                                            <input type="text" id="txtLabelAmount" name="ServiceAmount" class="form-control errorMessage" data-errormessage=" Please enter Amount" autocomplete="off" />
+                                        </div>
+                                        <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+
+                                            <label class=" control-label"> Invoice Type</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="radio" name="InvoiceType" class="rdbService" checked value="B2C">
+                                                </span>
+                                                <input type="text" class="form-control" value="B2C">
+                                            </div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="radio" name="InvoiceType" class="rdbService" value="B2B">
+                                                </span>
+                                                <input type="text" class="form-control" value="B2B">
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3 col-xs-12" style="padding-right: 10px; display:none" id="divGSTId">
+                                            <label class="control-label"> Company GST Id <span style="color:red"> *</span></label>
+                                            <input type="text" id="txtGSTId" name="CompanyGSTId" class="form-control " data-errormessage=" Please enter Company GST Id" autocomplete="off" />
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row" style="padding-top: 10px;">
+                                        <div class="col-md-3 col-xs-12" style="padding-top: 10px;">
+                                            <label class="control-label"> Noof Logins <span style="color:red"> *</span></label>
+                                            <input type="text" id="txtNoofLogins" name="NoofLogins" class="form-control errorMessage" data-errormessage=" Please enter No of Logins" autocomplete="off"  />
+                                        </div>
+
+                                        <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                                            <label class=" control-label"> SMS Pack</label>
+                                            <input type="hidden" id="hdnSMSGST" name="SMSGST" />
+                                            @*<input type="hidden" id="hdnSMSAmount" name="SMSAmount" />*@
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="radio" name="SMSPack" class="rdbSMS" checked value="No">
+                                                </span>
+                                                <input type="text" class="form-control" value="No">
+                                            </div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="radio" name="SMSPack" class="rdbSMS" value="Yes">
+                                                </span>
+                                                <input type="text" class="form-control" value="Yes">
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-3 col-xs-12" style="padding-top: 10px;">
+                                            <label class="control-label"> GST Amount <span style="color:red"> *</span></label>
+                                            <input type="text" id="txtGSTAmount" name="TotalGSTAmount" class="form-control " autocomplete="off" readonly />
+                                        </div>
+                                        <div class="col-md-3 col-xs-12" style="padding-top: 10px;">
+                                            <div>
+                                                <label>Total Amount <span style="color:red"> *</span></label>
+                                            </div>
+                                            <div>
+                                                <input type="text" name="TotalAmount" id="txtTotalAmount" class="form-control " autocomplete="off" readonly />
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    <div class="row" style="padding-top: 10px; display:none"  id="divSMSPack">
+                                        <div class="col-md-4 col-xs-12" style="padding-top: 10px;">
+                                            <div>
+                                                <label>SMS Amount<span style="color:red"> *</span></label>
+                                            </div>
+                                            <div>
+                                                <input type="text" name="SMSAmount" class="form-control" id="txtSMSAmount" autocomplete="off" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row" style="padding-top: 10px;">
+                                        <div class="col-md-3 col-xs-12" style="padding-top: 10px;">
+                                            <div>
+                                                <label>Transaction Id <span style="color:red"> *</span></label>
+                                            </div>
+                                            <div>
+                                                <input type="text" name="TransactionId" class="form-control errorMessage" data-errormessage=" Please enter TransactionId" autocomplete="off" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 col-xs-12" style="padding-top: 10px;">
+                                            <div>
+                                                <label>Paid via</label>
+                                            </div>
+                                            <div>
+                                                <input type="radio" class="rdbPaidVia" name="PaidType" value="Google Pay" checked />
+                                                <label>Google Pay</label>
+                                                <input type="radio" class="rdbPaidVia" name="PaidType" value="Phone Pay" />
+                                                <label>Phone Pay</label>
+                                                <input type="radio" class="rdbPaidVia" name="PaidType" value="Paytm" />
+                                                <label>Paytm</label>
+                                                <input type="radio" class="rdbPaidVia" name="PaidType" value="Others" />
+                                                <label>Others</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-xs-12" style="padding-top: 10px; display:none" id="divOthers">
+                                            <div>
+                                                <label>Specifie Mode<span style="color:red"> *</span></label>
+                                            </div>
+                                            <div>
+                                                <input type="text" name="OtherType" class="form-control" id="txtOtherType" autocomplete="off" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </section>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" id="btnSubmit" value="Submit" class="btn btn-primary" />
+
+                <input type="button" value="Close" class="btn btn-danger" data-dismiss="modal" />
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="SalesEditmodal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" id="divEditSale">
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="ViewSaleslmodal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <div class="modal-header" style="background-color:darkgray">
+                <h4 class="modal-title"> Sales Details</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-horizontal2" id="divViewSales">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Close" class="btn btn-warning" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#tblSales").dataTable();
+    });
+</script>
+<script>
+    $("#txtLabelAmount").keyup(function () {
+        debugger;
+        var total = 0; var smsgst = 0;
+        if ($('input:radio[name=SMSPack]:checked').val() == "Yes") {
+         
+            var value1 = $("#txtSMSAmount").val();
+            if (value1 == null || value1 == "" || value1 == 'undefined') {
+                value1 = 0;
+            } 
+            smsgst = parseFloat(value1) * 18 / 100;
+             total = parseFloat(value1) + parseFloat(smsgst);
+        }
+
+        var value = $(this).val();
+        if (value == null || value == "" || value == 'undefined') {
+            value = 0;
+        }
+        var gst = parseFloat(value) * 18 / 100;
+        $("#hdnServiceGST").val(gst);
+        $("#txtGSTAmount").val(gst + smsgst);
+         total = parseFloat(value) + parseFloat(gst) + parseFloat(total);
+        $("#txtTotalAmount").val(parseFloat(total));
+    });
+
+
+
+    $("#txtSMSAmount").keyup(function () {
+        debugger;
+        var total = 0; var smsgst = 0;
+         
+        var value1 = $("#txtLabelAmount").val();
+        if (value1 == null || value1 == "" || value1 == 'undefined') {
+                value1 = 0;
+           }
+        var value = $(this).val();
+        //if (value == null || value == "" || value == 'undefined') {
+        //    value = 0;
+        //}
+        var smsgst = parseFloat(value) * 18 / 100;
+        var gst = parseFloat(value1) * 18 / 100;
+        $("#txtGSTAmount").val(gst + smsgst);
+        total = parseFloat(value) + parseFloat(gst) + parseFloat(smsgst) + parseFloat(value1);
+        $("#hdnSMSGST").val(smsgst);
+        $("#txtTotalAmount").val(parseFloat(total));
+    });
+
+</script>
+
+<script>
+
+    function AddNewSales() {
+        //ClearData();
+        $("#SalesAddmodal").modal("show");
+    }
+
+    $(".rdbPaidVia").click(function () {
+
+        if ($('input:radio[name=PaidType]:checked').val() == "Others") {
+            $('#divOthers').show();
+
+        }
+        else {
+            $('#divOthers').hide();
+        }
+    });
+
+    $('#txtSMSAmount').keypress(function (e) {
+
+        var charCode = (e.which) ? e.which : event.keyCode
+
+        if (String.fromCharCode(charCode).match(/[^0-9]/g))
+
+            return false;
+
+    });   
+
+
+    $(".rdbSMS").click(function () {
+        debugger;
+        var amount = $("#txtLabelAmount").val();
+        var gst = $("#txtGSTAmount").val();
+        if (amount == null || amount == "" || amount == 'undefined') {
+            amount = 0;
+            gst = 0;
+        }
+        if ($('input:radio[name=SMSPack]:checked').val() == "Yes") {
+            $('#divSMSPack').show();
+
+            @*var value = @smsCharges;
+            var smsgst = parseFloat(value) * 18 / 100;
+            var total = parseFloat(value) + parseFloat(amount) + parseFloat(smsgst);
+            $("#txtTotalAmount").val(parseFloat(total));
+            $("#txtGSTAmount").val(parseFloat(gst) + parseFloat(smsgst));
+            $("#hdnSMSGST").val(parseFloat(smsgst));
+            $("#hdnSMSAmount").val(parseFloat(value));*@ 
+        }
+        else {
+            $('#divSMSPack').hide();
+            $('#txtSMSAmount').val('');
+            //var value = 0;
+            var gst = parseFloat(amount) * 18 / 100;
+            var total = parseFloat(amount) + parseFloat(gst);
+            $("#txtTotalAmount").val(total);
+            $("#txtGSTAmount").val(parseFloat(gst));
+            $("#hdnSMSGST").val('');
+           // $("#hdnSMSAmount").val('');
+        }
+    });
+
+
+    $(".rdbService").click(function () {
+
+        if ($('input:radio[name=InvoiceType]:checked').val() == "B2B") {
+            $('#divGSTId').show();
+        }
+        else {
+            $('#divGSTId').hide();
+        }
+    });
+
+
+    $("#btnSubmit").click(function () {
+        var isValueEmpty = false; var errorMessage = "";
+        var employees = "";
+        $(".errorMessage").each(function () {
+
+            if ($(this).val() == null || $(this).val() == "") {
+                isValueEmpty = true;
+                errorMessage = $(this).attr("data-errormessage");
+                return false;
+            }
+        });
+
+        //  alert($("#lstState").val());
+
+        if (isValueEmpty == true) {
+            Alert(errorMessage);
+            return false;
+        }
+        debugger;
+        var state = $("#lstState").val();
+        if (state == 0) {
+
+            Alert("Please select State");
+            return false;
+        }
+        if ($("#lstCity").val() == 0) {
+
+            Alert("Please select City");
+            return false;
+        }
+        if ($('input:radio[name=PaidType]:checked').val() == "Others") {
+            if ($("#txtOtherType").val() == null || $("#txtOtherType").val().trim() == "") {
+                Alert("Please enter Type of Payment");
+                return false;
+            }
+        }
+        if ($('input:radio[name=InvoiceType]:checked').val() == "B2B") {
+            if ($("#txtGSTId").val() == null || $("#txtGSTId").val().trim() == "") {
+                Alert("Please enter Company GST Id");
+                return false;
+            }
+        }
+
+        $("#frmSales").submit();
+    });
+    function BindCityName(ths) {
+        debugger;
+        var value = $("#lstCity option:selected").text();
+        // alert(value);
+        $("#hdnCity").val(value);
+    }
+    function BindStateName(ths) {
+        debugger;
+        var value = $("#lstState option:selected").text();
+        // alert(value);
+        $.post("/SalesEntry/BindCity", { stateId: $("#lstState").val() },
+            function (response) {
+                var cityList = '<option value="0"> Select </option>';
+                $.each(response.cities, function (data, value) {
+                    cityList += '<option value="' + value.Id + '">' + value.CityName + '</option>';
+                });
+                $("#lstCity").html(cityList);
+                debugger;
+                $("#hdnState").val(value);
+            });
+
+    }
+
+</script>
+
+
+
+<script>
+
+    function ViewSaleDetails(id) {
+        debugger;
+        $.post("/SalesEntry/ViewSaleDetailsById", { id: id }, function (response) {
+            $("#divViewSales").html(response.partialview);
+            $("#ViewSaleslmodal").modal('show');
+        });
+
+    }
+
+    function EditSaleDetails(id) {
+
+        $.post("/SalesEntry/EditSaleDetailsById", { id: id }, function (response) {
+            $("#divEditSale").html(response.partialview);
+            $("#SalesEditmodal").modal('show');
+        });
+
+    }
+</script>

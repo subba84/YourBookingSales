@@ -1,0 +1,185 @@
+﻿
+@model Employee
+@{
+    ViewBag.Title = "List";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    
+                    <div class="card-body">
+                        <div class="col-sm-6">
+                            <h4>Employee Master</h4>
+                        </div>
+                        <form id="frmEmployee" action="@Url.Action("Edit","Employee",new { area = "Master"})" method="post" enctype="multipart/form-data">
+                            @*<div class="row" style="padding-top: 10px;">
+                <h3>Employee Master</h3>
+            </div>*@
+                            <div class="row" style="padding-top: 10px;">
+                                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                    <label class=" control-label"> Employee Name <span style="color:red"> * </span></label>
+                                    <input type="text" id="txtEmpName" name="EmployeeName" class="form-control errorMessage" data-errormessage=" Please enter EmployeeName" />
+                                    <input type="hidden" id="hdnEmpId" />
+                                </div>
+
+                                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                    <label class=" control-label"> Email Id <span style="color:red"> * </span></label>
+                                    <input type="text" id="txtEmail" name="EmailId" class="form-control errorMessage" data-errormessage=" Please enter Email Address" />
+                                </div>
+
+                                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                    <label class="control-label"> Password <span style="color:red"> *</span></label>
+                                    <input type="text" id="txtPassword" name="Password" class="form-control errorMessage" data-errormessage=" Please enter Password" />
+                                </div>
+                            </div>
+
+                            <div class="row" style="padding-top: 10px;">
+                                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                    <label class="control-label"> Mobile Number <span style="color:red"> *</span></label>
+                                    <input type="text" id="txtMobile" name="MobileNumber" class="form-control errorMessage" data-errormessage=" Please enter MobileNumber" />
+                                </div>
+                                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                    <label class="control-label"> Role <span style="color:red"> *</span></label>
+                                    <select class="form-control errorMessage" name="EmployeeRole.RoleId" id="lstRole" onchange="BindRoleName(this);">
+                                        <option value="0">Select</option>
+                                        @if (DataCache.Roles != null && DataCache.Roles.Count > 0)
+                                        {
+                                            foreach (var item in DataCache.Roles)
+                                            {
+                                                <option value="@item.Id">@item.RoleName</option>
+
+                                            }
+                                        }
+                                    </select>
+                                    <input type="hidden" id="hdnRoleName" name="EmployeeRole.RoleName" />
+                                </div>
+                                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                    <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                                        <label class="control-label"> </label>
+                                        <input type="button" value="Save" id="btnSave" class="btn btn-primary form-control" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                        <div class="row" style="padding-top: 10px;">
+                            <h4>Employee List</h4>
+                        </div>
+                        @*<div class="row" style="padding-top: 10px;">*@
+                        <table class="table table-bordered table-hover dataTable no-footer " id="empTable">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Employee Name</th>
+                                    <th scope="col">Email Id</th>
+                                    <th scope="col">Mobile Number</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col">CreatedOn</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.EmployeeList != null && Model.EmployeeList.Count() > 0)
+                                {
+                                    foreach (var item in Model.EmployeeList)
+                                    {
+                                        <tr>
+                                            <td> @item.EmployeeName  </td>
+                                            <td> @item.EmailId  </td>
+                                            <td> @item.MobileNumber  </td>
+                                            <td> @(item.EmployeeRole!=null? item.EmployeeRole.RoleName :"  -- " )</td>
+                                            <td>@(item.CreatedOn!=null?Convert.ToDateTime(item.CreatedOn).ToShortDateString():" -- ")  </td>
+                                            <td> @(item.IsActive==true?" Active " : "InActive" )</td>
+                                            <td>
+                                                <span class="fa-pencil"><a href="#" class="fa fa-pen-alt bigger-130" onclick="EditEmployee('@item.Id')">Edit</a></span>
+                                                @* |<span class="fa-pencil"><a href="#" class="fa fa-pen-alt bigger-130" onclick="DeleteEmployee('@item.Id')">Delete</a></span>*@
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="10"> no records..</td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                        @* </div> *@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+<div class="modal fade" id="EmpAddmodal">
+    <div class="modal-dialog modal-xl" @*style="width:600px; height:auto"*@>
+        <div class="modal-content" id="divEmpEditSale">
+
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+
+<script>
+    $(function () {
+        $("#empTable").dataTable();
+    });
+</script>
+<script>
+   
+    $("#btnSave").click(function () {
+        debugger;
+        var isValueEmpty = false; var errorMessage = "";
+        var employees = "";
+        $(".errorMessage").each(function () {
+
+            if ($(this).val() == null || $(this).val() == "") {
+                isValueEmpty = true;
+                errorMessage = $(this).attr("data-errormessage");
+                return false;
+            }
+        });
+
+        if (isValueEmpty == true) {
+            Alert(errorMessage);
+            return false;
+        }
+        $("#frmEmployee").submit();
+    });
+
+    function EditEmployee(id) {
+        debugger;
+        $.post("/Employee/GetEmployeeDetailsById", { id: id }, function (response) {
+            $("#divEmpEditSale").html(response.partialview);
+            $("#EmpAddmodal").modal('show');
+        });
+    }
+
+    function BindRoleName() {
+        var value = $("#lstRole option:selected").text();
+        if ($("#lstRole option:selected").val() != "0") {
+            $("#hdnRoleName").val(value);
+        }
+        else {
+            $("#hdnRoleName").val(null);
+        }
+
+    }
+
+</script>

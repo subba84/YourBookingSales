@@ -1,0 +1,197 @@
+﻿
+@model SalesApplication.SalesEntry
+@{
+    ViewBag.Title = "List";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content">
+    <div class="row">
+        <div>
+            <div class="card" style="min-height:500px;">
+
+                <div class="card-body">
+                    <div class="col-sm-6">
+                        <h4>Pending for Renewal Approval</h4>
+                    </div>
+                    <table class="table table-bordered" id="tblApprove">
+                        <thead class="thead-dark">
+                            <tr>
+                                @*<th scope="col">SNo</th>*@
+                                <th scope="col">Name</th>
+                                <th scope="col">Mobile Number</th>
+                                <th scope="col">State</th>
+                                <th scope="col">City</th>
+                                @*<th scope="col">Service</th>
+                                  <th scope="col">Paid Type</th>
+                                  <th scope="col">Renewal Amount</th>*@
+                                <th scope="col">Label of Amount</th>
+                                <th scope="col">SMS Pack</th>
+                                <th scope="col">GST Amount</th>
+                                <th scope="col">Total Amount</th>
+                                <th scope="col">Paid Type</th>
+                                <th scope="col">Created By</th>
+                                <th scope="col">Created On</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Payment History</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.salesList != null && Model.salesList.Count() > 0)
+                            {
+                                int i = 1;
+                                foreach (var item in Model.salesList)
+                                {
+                                    if (item.renewalHistoryDetails != null)
+                                    {
+                            <tr>
+                                @*<td> @i  </td>*@
+                                <td> @item.Name  </td>
+                                <td> @item.MobileNumber  </td>
+                                <td> @item.StateName  </td>
+                                <td> @item.CityName  </td>
+                                @*<td> @item.renewalHistoryDetails.ServiceType  </td>
+        <td> @item.renewalHistoryDetails.PaidType  </td>
+        <td> @item.renewalHistoryDetails.ServiceAmount  </td>*@
+                                <td> @item.ServiceAmount  </td>
+                                <td> @(item.SMSPack=="Yes"?"Yes":"No" ) </td>
+                                <td> @item.TotalGSTAmount  </td>
+                                <td> @item.TotalAmount  </td>
+                                <td> @item.PaidType  </td>
+                                <td> @item.renewalHistoryDetails.CreatedByName  </td>
+                                <td> @(item.renewalHistoryDetails.CreatedOn!=null?Convert.ToDateTime(item.CreatedOn).ToShortDateString():" -- ") </td>
+                                <td> @item.RenewelStatusName  </td>
+                                <td> <a class="fa fa-street-view" onclick="ViewPaymentHistory(@item.Id)">View Payment</a> </td>
+                                <td> <span class="fa-pencil"><a href="#" class="fa fa-pen-alt bigger-130" onclick="GetRenewalDetailsForAction('@item.Id')">Action</a></span> </td>
+                            </tr>
+                                    }
+
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="12"> no records..</td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+
+
+                    <div class="modal fade" id="RenewalApprovalmodal">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+
+                                <div class="modal-header" style="background-color:darkgray">
+                                    <h4 class="modal-title"> Renewal Details</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-horizontal2" id="divApproveRejectRenewal">
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="button" id="btnApprove" onclick="ApproveRejectRenewal('@SaleStatus.ApproveRenewal')" value="Approve" class="btn btn-success" />
+                                    <input type="button" id="btnReject" onclick="ApproveRejectRenewal('@SaleStatus.RejectRenewal')" value="Reject" class="btn btn-danger" />
+                                    <input type="button" value="Close" class="btn btn-warning" data-dismiss="modal" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="modal fade" id="PaymentHistorymodal">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+
+                                <div class="modal-header" style="background-color:darkgray">
+                                    <h4 class="modal-title"> Payment History</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <div class="form-horizontal2" id="divPaymentHistory">
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="button" value="Close" class="btn btn-warning" data-dismiss="modal" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+<script>
+    $(function () {
+        $("#tblApprove").dataTable();
+    });
+</script>
+<script>
+
+    function ViewPaymentHistory(id) {
+        $.post("/Renewal/ViewPaymentHistory", { SalesId: id },
+            function (response) {
+                $("#divPaymentHistory").html(response.partialview);
+                $("#PaymentHistorymodal").modal('show');
+            });
+
+    }
+
+
+    function GetRenewalDetailsForAction(id) {
+
+        $.post("/Approve/EditRenewalDetailsById", { id: id }, function (response) {
+            $("#divApproveRejectRenewal").html(response.partialview);
+
+            $("#RenewalApprovalmodal").modal('show');
+        });
+    }
+
+
+</script>
+<script>
+    function ApproveRejectRenewal(stats) {
+        debugger;
+        var id = $("#hdnId").val();
+        var comments = $("#txtComments").val();
+
+        if (stats == @SaleStatus.RejectRenewal) {
+            if ($("#txtComments").val() == null || $("#txtComments").val().trim() == "") {
+                Alert("please enter comments ");
+                return false;
+            }
+        }
+        $.post("/Approve/ApproveRejectRenewal", { id: id, status: stats, comments: comments }, function (response) {
+            if (stats == @SaleStatus.ApproveRenewal) {
+                $("#RenewalApprovalmodal").modal('hide');
+                Alert("Approved successfully");
+            }
+            else {
+                $("#RenewalApprovalmodal").modal('hide');
+                Alert("Rejected successfully");
+            }
+            location.reload();
+        });
+    }
+</script>

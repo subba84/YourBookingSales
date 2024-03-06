@@ -1,0 +1,215 @@
+﻿
+
+@model SalesApplication.SalesEntry
+
+
+<div class="row">
+    <div class="col-md-12">
+        <section>
+            @if (Model != null && Model.renewalHistory != null && Model.renewalHistory.Count() > 0)
+            {
+                @*<div class="row" style="padding-top: 10px;">
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                    <label class="control-label" style="font:bold"> Name : </label>
+                    <label class="control-label" style="font:normal">@Model.Name</label>
+                </div>
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                    <label class="control-label" style="font:bold"> Mobile : </label>
+                    <label class="control-label"> @Model.MobileNumber </label>
+                </div>
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                    <label class="control-label"> Email : </label>
+                    <label class="control-label"> @(Model.EmailId != null ? Model.EmailId : "--")</label>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 10px;">
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                    <label class="control-label"> State : </label>
+                    <label class="control-label"> @Model.StateName </label>
+                </div>
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                    <div class="form-group">
+                        <label class="control-label"> City : </label>
+                        <label class="control-label"> @Model.CityName </label>
+
+                    </div>
+                </div>
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                    <label class="control-label"> Address : </label>
+                    <label class="control-label"> @Model.Address</label>
+                </div>
+            </div>
+
+            <div class="row" style="padding-top: 10px;">
+
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                    <label class=" control-label"> Landmark : </label>
+                    <label class=" control-label"> @Model.Landmark</label>
+                </div>
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+
+                    <label class=" control-label"> Service : </label>
+                    <label class=" control-label"> @(Model.renewalHistoryDetails.ServiceType) </label>
+                </div>
+
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                    <label class="control-label"> Label of Amount : </label>
+                    <label class="control-label"> @(Model.renewalHistoryDetails.ServiceAmount) </label>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 10px;">
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                    <label class="control-label">Transaction Id : </label>
+                    <label class="control-label">@Model.renewalHistoryDetails.TransactionId</label>
+                </div>
+                <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                    <label class="control-label">Paid via : </label>
+                    <label class="control-label">@Model.renewalHistoryDetails.PaidType</label>
+                </div>
+                @if (Model.PaidType == "Others")
+                {
+                    <div class="col-md-4 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label">Paid Mode : </label>
+                        <label class="control-label">@Model.renewalHistoryDetails.OtherType</label>
+                    </div>
+                }
+            </div>*@
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label" style="font:bold"> Name : </label>
+                        <label class="control-label" style="font:normal">@Model.Name</label>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label" style="font:bold"> Mobile : </label>
+                        <label class="control-label"> @Model.MobileNumber </label>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label"> Email : </label>
+                        <label class="control-label"> @(Model.EmailId!=null? Model.EmailId : "--")</label>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label" style="font:bold"> PanNumber : </label>
+                        <label class="control-label"> @Model.PanNumber </label>
+                    </div>
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label"> State : </label>
+                        <label class="control-label"> @Model.StateName </label>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <div class="form-group">
+                            <label class="control-label"> City : </label>
+                            <label class="control-label"> @Model.CityName </label>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label"> Address : </label>
+                        <label class="control-label"> @Model.Address</label>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class=" control-label"> Landmark : </label>
+                        <label class=" control-label"> @Model.Landmark</label>
+                    </div>
+                </div>
+
+                <div class="row" style="padding-top: 10px;">
+
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label"> Label of Amount : </label>
+                        <label class="control-label"> @Model.ServiceAmount </label>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label">SMS Pack : </label>
+                        <label class="control-label">@(Model.SMSPack!="Yes"?"No":"Yes")</label>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class=" control-label"> Invoice Type : </label>
+                        <label class=" control-label"> @Model.InvoiceType</label>
+                    </div>
+                    @if (Model.InvoiceType == "B2B")
+                    {
+                        <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                            <label class="control-label"> Company GST Id : </label>
+                            <label class="control-label"> @Model.CompanyGSTId </label>
+                        </div>
+                    }
+                </div>
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label">GST Amount : </label>
+                        <label class="control-label">@(Model.TotalGSTAmount)</label>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label">Total Amount : </label>
+                        <label class="control-label">@(Model.TotalAmount)</label>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label">Transaction Id : </label>
+                        <label class="control-label">@Model.TransactionId</label>
+                    </div>
+                    <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                        <label class="control-label">Paid via :</label>
+                        <label class="control-label">@Model.PaidType</label>
+                    </div>
+                    @if (Model.PaidType == "Others")
+                    {
+                        <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                            <label class="control-label">Paid Mode :</label>
+                            <label class="control-label">@Model.OtherType</label>
+                        </div>
+                    }
+                </div>
+                <div class="row" style="padding-top: 15px;">
+                    <div class="  col-xs-12 ">
+                        <label class="control-label"> Audit Details </label>
+                        <table class="table table-bordered">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">SNo</th>
+                                    <th scope="col">Employee Name</th>
+                                    <th scope="col">Created On</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.renewalHistory != null && Model.renewalHistory.Count() > 0)
+                                {
+                                    int i = 1;
+                                    foreach (var item in Model.renewalHistory)
+                                    {
+                                        <tr>
+                                            <td> @i  </td>
+                                            <td> @item.CreatedByName  </td>
+                                            <td> @(item.CreatedOn != null ? Convert.ToDateTime(item.CreatedOn).ToShortDateString() : "--") </td>
+                                            <td> @item.StatusName  </td>
+                                            <td style="text-align:center"> @(item.Comments != null ? item.Comments : "--" ) </td>
+                                        </tr>
+                                        i++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5"> no records..</td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <div class="row" style="padding-top: 10px;">
+                    <label class="control-label"> Renewal not Initiated </label>
+                </div>
+            }
+        </section>
+    </div>
+
+</div>

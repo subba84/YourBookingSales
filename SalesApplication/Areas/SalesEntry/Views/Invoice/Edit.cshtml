@@ -1,0 +1,316 @@
+﻿@model SalesApplication.Models.InvoiceModel
+@{
+
+}
+
+
+<div class="modal-header" style="background-color:darkgray">
+    <h4 class="modal-title">Invoice Details</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="form-horizontal2" id="divSalesDetails">
+        <div class="row">
+            <div class="col-md-12">
+                <section>
+                    <form id="frmEditSalesRenewal" action="@Url.Action("Edit","Invoice",new { area = "SalesEntry"})" method="post" enctype="multipart/form-data">
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col-md-3 col-xs-12" style="padding-right: 10px;">
+                                <input type="hidden" id="hdnId" value="" name="InvoiceDetails.Id" />
+                                <label class="control-label"> Company <span style="color:red"> *</span></label>
+                                <select class="form-control" id="slCompany" name="InvoiceDetails.CompanyId">
+                                    <option value="0">Select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row p-2">
+                            <h3><u>Invoice Line Items</u></h3><br />
+                            <table class="table table-hover table-bordered" id="tblInvoice">
+                                <thead>
+                                    <tr>
+                                        <th>Service Type</th>
+                                        <th>Unit Price</th>
+                                        <th>Quantity</th>
+                                        <th>Amount</th>
+                                        <th>GST</th>
+                                        <th>Total Amount</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.InvoiceLineItems != null && Model.InvoiceLineItems.Count() > 0)
+                                    {
+                                        int i = 0;
+                                        foreach (var item in Model.InvoiceLineItems)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <select class="form-control serviceType" id="slServiceType_0" name="InvoiceLineItems[@i].ServiceType">
+                                                        <option value="0">Select</option>
+                                                    </select>
+                                                    <input type="hidden" class="hdnInvoiceLineItemId" name="InvoiceLineItems[@i].Id" value="@item.Id" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control unitPrice" name="InvoiceLineItems[@i].UnitPrice" value="@item.UnitPrice" style="text-align:right" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control quantity" name="InvoiceLineItems[@i].Quantity" value="@item.Quantity" style="text-align:right" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control salesAmount" readonly name="InvoiceLineItems[@i].SalesAmount" value="@item.SalesAmount" style="text-align:right" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control gstAmount" readonly name="InvoiceLineItems[@i].GSTAmount" value="@item.GSTAmount" style="text-align:right" />
+                                                </td>
+                                                <td>
+                                                    <input type="number" class="form-control totalAmount" readonly style="text-align:right" />
+                                                </td>
+                                                <td>
+                                                    <input type="button" class="btn btn-danger deleteInvoiceLineItem" value="Delete" />
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>
+                                                <select class="form-control serviceType" id="slServiceType_0" name="InvoiceLineItems[0].ServiceType">
+                                                    <option value="0">Select</option>
+                                                </select>
+                                                <input type="hidden" class="hdnInvoiceLineItemId" name="InvoiceLineItems[0].Id" />
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control unitPrice" name="InvoiceLineItems[0].UnitPrice" style="text-align:right" />
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control quantity" name="InvoiceLineItems[0].Quantity" style="text-align:right" />
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control salesAmount" readonly name="InvoiceLineItems[0].SalesAmount" style="text-align:right" />
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control gstAmount" readonly name="InvoiceLineItems[0].GSTAmount" style="text-align:right" />
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control totalAmount" readonly style="text-align:right" />
+                                            </td>
+                                            <td>
+                                                <input type="button" class="btn btn-danger deleteInvoiceLineItem" value="Delete" />
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td colspan="2">
+                                            @{
+                                                double salesAmount = Model.InvoiceLineItems.Sum(x => Convert.ToDouble(x.SalesAmount));
+                                                double gstAmount = Model.InvoiceLineItems.Sum(x => Convert.ToDouble(x.GSTAmount));
+                                                double totalAmount = salesAmount + gstAmount;
+                                            }
+                                        </td>
+                                        <td>
+                                            <label>Total</label>
+                                        </td>
+                                        <td style="text-align:right">
+                                            <label id="lblTotal">@salesAmount</label>
+                                        </td>
+                                        <td style="text-align:right">
+                                            <label id="lblGST">@gstAmount</label>
+                                        </td>
+                                        <td style="text-align:right">
+                                            <label id="lblTotalAmount">@totalAmount</label>
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row p-2">
+                            <div class="col-lg-11"></div>
+                            <div class="col-lg-1">
+                                <input type="button" id="btnAddRow" class="btn btn-success" value="+ Add" />
+                            </div>
+                        </div>
+                        <div class="row modal-footer">
+                            <input type="submit" id="btnSave" value="Submit" class="btn btn-primary" />
+                            <input type="button" value="Close" class="btn btn-danger" data-dismiss="modal" />
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    var options0 = '<option value="0">Select</option>';
+    $.getJSON("/Invoice/GetServiceType", function (data) {
+        $.each(data, function (index, item) {
+            options0 += '<option value="' + item.Name + '">' + item.Name + '</option>';
+        });
+        $("#slServiceType_0").html(options0);
+    });
+
+    var options1 = '<option value="0">Select</option>';
+    $.getJSON("/Invoice/GetCompanies", function (data) {
+        $.each(data, function (index, item) {
+            options1 += '<option value="' + item.Id + '">' + item.Name + '</option>';
+        });
+        $("#slCompany").html(options1);
+    });
+
+    $(document).on("click", ".deleteInvoiceLineItem", function () {
+        var id = $(this).attr("data-id");
+        var thisRow = $(this).closest("tr");
+        $(thisRow).remove();
+        fnAmountCalculation();
+        @*$.ajax({
+            type: "post",
+            url: "@Url.Action("DeleteInvoiceLineItem", "Invoice")?id=" + id,
+            data: {},
+            dataType: "application/json",
+            success: function (data) {
+                $(thisRow).remove();
+            },
+            error: function (err) {
+
+            }
+        });*@
+    });
+
+    $("#btnAddRow").click(function () {
+        var trlength = $("#tblInvoice tbody tr").length;
+        trlength = trlength - 1;
+        $("#tblInvoice").find('tr:last').prev().after('<tr>' +
+            '<td>' +
+            '<select class="form-control serviceType" id="slServiceType_' + trlength +'" name="InvoiceLineItems[' + trlength +'].ServiceType">' +
+            '    <option value="0">Select</option>' +
+            '</select>' +
+            '<input type="hidden" class="hdnInvoiceLineItemId" name="InvoiceLineItems[' + trlength +'].Id" />'+
+            '</td>' +
+            '<td>' +
+            '<input type="number" class="form-control unitPrice" name="InvoiceLineItems[' + trlength +'].UnitPrice" style="text-align:right" />' +
+            '</td>' +
+            '<td>' +
+            '<input type="number" class="form-control quantity" name="InvoiceLineItems[' + trlength +'].Quantity" style="text-align:right" />' +
+            '</td>' +
+            '<td>' +
+            '<input type="number" class="form-control salesAmount" readonly name="InvoiceLineItems[' + trlength +'].SalesAmount" style="text-align:right" />' +
+            '</td>' +
+            '<td>' +
+            '<input type="number" class="form-control gstAmount" readonly name="InvoiceLineItems[' + trlength +'].GSTAmount" style="text-align:right" />' +
+            '</td>' +
+            '<td>' +
+            '<input type="number" class="form-control totalAmount" readonly style="text-align:right" />' +
+            '</td>' +
+            '<td>' +
+            '<input type="button" class="btn btn-danger deleteInvoiceLineItem" value="Delete" />' +
+            '</td>' +
+            '</tr> ');
+
+        var options = '<option value="0">Select</option>';
+        $.getJSON("/Invoice/GetServiceType", function (data) {
+            $.each(data, function (index, item) {
+                options += '<option value="' + item.Name + '">' + item.Name +'</option>';
+            });
+            $("#slServiceType_" + trlength).html(options);
+        });
+        
+    });
+
+    $(document).on("change", ".unitPrice,.quantity", function () {
+        fnAmountCalculation();
+    });
+
+
+    function fnAmountCalculation() {
+        debugger;
+        $(".unitPrice").each(function () {
+            var thisAmount = ($(this).val() == null || $(this).val() == "") ? 0 : parseFloat($(this).val());
+            var thisQuantity = $(this).closest("tr").find(".quantity").val();
+            thisQuantity = (thisQuantity == null || thisQuantity == "") ? 0 : parseFloat(thisQuantity);
+            var calculatedAmountperQty = parseFloat(thisAmount) * parseFloat(thisQuantity);
+            // GST Calculation
+            var gstAmt = calculatedAmountperQty * (18 / 100);
+            $(this).closest("tr").find(".salesAmount").val(calculatedAmountperQty);
+            $(this).closest("tr").find(".gstAmount").val(gstAmt);
+        });
+
+        var amount = 0;
+        $(".salesAmount").each(function () {
+            var thisAmount = ($(this).val() == null || $(this).val() == "") ? 0 : parseFloat($(this).val());
+            var thisGst = $(this).closest("tr").find(".gstAmount").val();
+            thisGst = (thisGst == null || thisGst == "") ? 0 : parseFloat(thisGst);
+            $(this).closest("tr").find(".totalAmount").val(parseFloat(thisAmount) + parseFloat(thisGst));
+            amount += thisAmount;
+        });
+
+        var gst = 0;
+        $(".gstAmount").each(function () {
+            var thisGst = ($(this).val() == null || $(this).val() == "") ? 0 : parseFloat($(this).val());
+            var thisAmount = $(this).closest("tr").find(".salesAmount").val();
+            thisAmount = (thisAmount == null || thisAmount == "") ? 0 : parseFloat(thisAmount);
+            $(this).closest("tr").find(".totalAmount").val(parseFloat(thisAmount) + parseFloat(thisGst));
+            gst += ($(this).val() == null || $(this).val() == "") ? 0 : parseFloat($(this).val());
+        });
+
+        var totalAmount = 0;
+        $(".totalAmount").each(function () {
+            totalAmount += ($(this).val() == null || $(this).val() == "") ? 0 : parseFloat($(this).val());
+        });
+
+        $("#lblTotal").text(parseFloat(amount).toFixed(0));
+        $("#lblGST").text(parseFloat(gst).toFixed(0));
+        $("#lblTotalAmount").text(parseFloat(totalAmount).toFixed(0));
+    };
+
+    $("#btnSave").click(function () {
+        var company = $("#slCompany").val();
+        if (company == 0) {
+            alert("Please Select Company");
+            return false;
+        }
+
+        var isServiceTypeValid = true;
+        $(".serviceType").each(function () {
+            if ($(this).val() == null || $(this).val() == "0") {
+                isServiceTypeValid = false;
+                return false;
+            }
+        });
+        if (isServiceTypeValid == false) {
+            alert("Please Select Service Type");
+            return false;
+        }
+
+        var isUnitPriceValid = true;
+        $(".unitPrice").each(function () {
+            if ($(this).val() == null || $(this).val() == "") {
+                isUnitPriceValid = false;
+                return false;
+            }
+        });
+        if (isUnitPriceValid == false) {
+            alert("Please Enter Unit Price");
+            return false;
+        }
+
+        var isQuantityValid = true;
+        $(".quantity").each(function () {
+            if ($(this).val() == null || $(this).val() == "") {
+                isQuantityValid = false;
+                return false;
+            }
+        });
+        if (isQuantityValid == false) {
+            alert("Please Enter Quantity");
+            return false;
+        }
+    });
+</script>

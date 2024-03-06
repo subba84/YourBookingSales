@@ -1,0 +1,466 @@
+﻿
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BBS | Sales List</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+@if (Session["UserId"] == null)
+{
+    Response.RedirectToRoute(new { action = "Logout", controller = "Home" });
+}
+else
+{
+    <body class="hold-transition sidebar-mini">
+        <div class="wrapper">
+            <!-- Navbar -->
+            <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+                <!-- Left navbar links -->
+                <ul class="navbar-nav ml-auto">
+                    <!-- Messages Dropdown Menu -->
+
+                    <li>
+                        <a href="/Home/Logout">
+                            <input type="button" class="btn btn-primary" value="Logout" />
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- /.navbar -->
+            <!-- Main Sidebar Container -->
+            <aside class="main-sidebar sidebar-dark-primary elevation-4">
+                <!-- Brand Logo -->
+
+                <a href="#" class="brand-link">
+
+                    @if (CurrentContext.User.RoleId == RoleIds.Admin.ToString())
+                    {
+                        <img src="dist/img/AdminLTELogo.png"
+                             alt="AdminLTE Logo"
+                             class="brand-image img-circle elevation-3"
+                             style="opacity: .8">
+                        <span class="brand-text font-weight-light">Admin Panel</span>
+                    }
+                    else if (CurrentContext.User.RoleId == RoleIds.Sales.ToString())
+                    {
+                        <span class="brand-text font-weight-light">Sales Panel</span>
+                    }
+                    else if (CurrentContext.User.RoleId == RoleIds.Approver.ToString())
+                    {
+                        <span class="brand-text font-weight-light">Approver Panel</span>
+                    }
+                    else
+                    {
+                        <span class="brand-text font-weight-light">Viewer Panel</span>
+                    }
+                </a>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <!-- Sidebar user (optional) -->
+                    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                        <div class="image">
+                            <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                        </div>
+                        <div class="info">
+                            <a href="#" class="d-block">@CurrentContext.User.UserName</a>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Menu -->
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            @if (CurrentContext.User.RoleId == RoleIds.Admin.ToString())
+                            {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","Employee",new { Area="Master"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Employee Master
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","StateMaster",new { Area="Master"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            State Master
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","CityMaster",new { Area="Master"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            City Master
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","Renewal",new { Area="Renewel"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Renewals
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","Reports",new { Area="Reports"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Sales Reports
+                                        </p>
+                                    </a>
+                                </li>
+
+
+                            }
+                            else if (CurrentContext.User.RoleId == RoleIds.Sales.ToString())
+                            {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","SalesEntry",new { Area="SalesEntry"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Sales Details
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="@Url.Action("RenewalList","SalesEntry",new { Area="SalesEntry"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Renewals
+                                        </p>
+                                    </a>
+                                </li>
+
+
+
+                            }
+                            else if (CurrentContext.User.RoleId == RoleIds.Approver.ToString())
+                            {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","Approve",new { Area="SalesEntry"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Pending for  Approval
+                                        </p>
+                                    </a>
+                                </li>
+
+
+                                <li class="nav-item">
+                                    <a href="@Url.Action("ApproverRenewalList","Approve",new { Area="SalesEntry"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Renewals
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="@Url.Action("SmsTopup","Approve",new { Area="SalesEntry"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            SMS Topup
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("AppRenewal","Approve",new { Area="SalesEntry"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Application Renewal
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","Finance",new { Area="SalesEntry"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Finance
+                                        </p>
+                                    </a>
+                                </li>
+
+
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link" onclick="OpenModel()">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Contact
+                                        </p>
+                                    </a>
+                                </li>
+
+
+                            }
+                            else if (CurrentContext.User.RoleId == RoleIds.Finance.ToString())
+                            {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","Finance",new { Area="SalesEntry"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Finance
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","Viewer",new { Area="SalesEntry"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            View Sales
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("RenewalList","Viewer",new { Area="SalesEntry"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Sales Renewal
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="@Url.Action("List","Reports",new { Area="Reports"}) " class="nav-link">
+                                        <i class="nav-icon fas fa-table"></i>
+                                        <p>
+                                            Sales Reports
+                                        </p>
+                                    </a>
+                                </li>
+                            }
+
+                            <li class="nav-item">
+                                <a href="@Url.Action("CompanyModuleAccessList","ManageCompanyModuleAccess",new { Area="Master"}) " class="nav-link">
+                                    <i class="nav-icon fas fa-table"></i>
+                                    <p>
+                                        Company Module Access
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <!-- /.sidebar-menu -->
+                </div>
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+
+                @RenderBody()
+            </div>
+            <!-- /.content-wrapper -->
+            <footer class="main-footer">
+                <!--<div class="float-right d-none d-sm-block">
+                  <b>Version</b> 3.0.4
+                </div>
+                <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong> All rights
+                reserved.-->
+            </footer>
+
+            <!-- Control Sidebar -->
+            <aside class="control-sidebar control-sidebar-dark">
+                <!-- Control sidebar content goes here -->
+            </aside>
+            <!-- /.control-sidebar -->
+        </div>
+        <!-- ./wrapper -->
+        <!-- jQuery -->
+        <script src="plugins/jquery/jquery.min.js"></script>
+        <!-- Bootstrap 4 -->
+        <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- DataTables -->
+        <script src="plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+        <!-- AdminLTE App -->
+        <script src="dist/js/adminlte.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="dist/js/demo.js"></script>
+        <!-- page script -->
+        <script>
+            $(function () {
+                $("#example1").DataTable({
+                    "responsive": true,
+                    "autoWidth": false,
+                });
+                $('#example2').DataTable({
+                    "paging": true,
+                    "lengthChange": false,
+                    "searching": false,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                });
+            });</script>
+    </body>
+}
+
+</html>
+
+
+
+<div class="modal fade" id="alert">
+    <div class="modal-dialog modal-l" @*style="width:500px; height:auto"*@>
+        <div class="modal-content">
+
+            <div class="modal-header" style="background-color:darkgray">
+                <h4 class="modal-title"> Message</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal2">
+                    <div class="row" style="padding-top: 10px;">
+                        <div class=" col-xs-12" style="padding-right: 10px;">
+                            <p id="msgText"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Close" class="btn btn-warning" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="Contactmodal">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content">
+
+            <div class="modal-header" style="background-color:darkgray">
+                <h4 class="modal-title"> Leave us a message</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="frmContact" action="@Url.Action("SendMailMessage","Approve",new { area = "SalesEntry"})" method="post" enctype="multipart/form-data">
+                    <div class="form-horizontal2">
+                        <div class="col-md" style="padding-right: 10px;">
+                            <label class="control-label">Full Name </label>
+                            <input type="text" id="txtName1" name="Name" class="form-control errorMessage2" autocomplete="off" data-errormessage=" Please enter Name" />
+                        </div>
+                        <div class="col-md" style="padding-right: 10px;">
+                            <label class="control-label"> Email ID</label>
+                            <input type="text" id="txtEmail" name="EmailId" class="form-control errorMessage2" data-errormessage=" Please enter MailId"/>
+                        </div>
+                        <div class="col-md" style="padding-right: 10px;">
+                            <label class="control-label"> Phone Number </label>
+                            <input type="text" id="txtMobile" name="PhoneNumber" class="form-control errorMessage2" autocomplete="off" data-errormessage=" Please enter Phone Number" />
+                        </div>
+                        <div class="col-md" style="padding-right: 10px;">
+                            <label class="control-label"> Message </label>
+                            <textarea class="form-control errorMessage2" id="textAreaExample1" name="Message" rows="3" data-errormessage=" Please enter Message"></textarea>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Send" class="btn btn-success"  onclick="SendMailMessage()"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="notificationPopup" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-l" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header" style="background-color:darkgray">
+                <h4 class="modal-title"> Alert</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <b id="">@TempData["Notification"]</b>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-success" value="Ok" data-dismiss="modal" aria-label="Close" id="btnNotificationOk" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function OpenModel() {
+        $("#Contactmodal").modal('show');
+    }
+    function SendMailMessage() {
+        var isValueEmpty = false; var errorMessage = "";
+        var employees = "";
+        $("#frmContact .errorMessage2").each(function () {
+            if ($(this).val() == null || $(this).val().trim() == "") {
+                isValueEmpty = true;
+                errorMessage = $(this).attr("data-errormessage");
+                return false;
+            }
+        }); 
+        if (isValueEmpty == true) {
+            Alert(errorMessage);
+            return false;
+        }
+        $("#frmContact").submit();
+    }
+</script>
+
+<script>
+    if ("@TempData["Notification"]" != null && "@TempData["Notification"]" != "") {
+            $("#notificationPopup").modal('show');
+        }
+
+        $("#btnNotificationOk").click(function () {
+            $("#notificationPopup").modal('hide');
+        });
+
+    function Hidealert() {
+        $("#alert").hide();
+    }
+
+    function Alert(msg) {
+
+        $("#msgText").text(msg);
+        $("#alert").modal("show");
+
+    };
+</script>
+

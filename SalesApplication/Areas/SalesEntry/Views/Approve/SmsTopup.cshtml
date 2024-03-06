@@ -1,0 +1,96 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h3>SMS Topup</h3>
+                <div class="col-md-12">
+                    <section>
+                        <div class="row" style="padding-top: 10px;">
+
+                            <div class="col-md-6 col-xs-12" style="padding-right: 10px;">
+                                <label class="control-label">Registered Mobile <span style="color:red"> *</span></label>
+                                <input type="text" id="txtSalesMobile" maxlength="10" class="form-control errorMessage" autocomplete="off" data-errormessage=" Please enter Registered MobileNumber" />
+                            </div>
+                            <div class="col-md-6 col-xs-12" style="padding-right: 10px;">
+                                <label class="control-label"> Sms Pack Amount <span style="color:red"> *</span></label>
+                                <input type="text" id="txtSmsAmount" class="form-control errorMessage" autocomplete="off" data-errormessage=" Please enter SMS Pack Amount" />
+                            </div>
+                            <div class="col-md-6 col-xs-12" style="padding-right: 10px;">
+                                <label class="control-label"> WhatsApp Pack Amount <span style="color:red"> *</span></label>
+                                <input type="text" id="txtWhatsAppAmount" class="form-control errorMessage" autocomplete="off" data-errormessage=" Please enter WhatsApp Pack Amount" />
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top: 10px;text-align:center;margin-left: -7.5px;">
+                            <input type="button" id="btnSMSPackSubmit" value="Submit" class="btn btn-primary" />
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+
+
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables -->
+<script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+
+<script>
+    $("#btnSMSPackSubmit").click(function () {
+        debugger;
+        var isValueEmpty = false; var errorMessage = "";
+
+        $(".errorMessage").each(function () {
+
+            if ($(this).val() == null || $(this).val() == "") {
+                isValueEmpty = true;
+                errorMessage = $(this).attr("data-errormessage");
+                return false;
+            }
+        });
+        if (isValueEmpty == true) {
+            Alert(errorMessage);
+            return false;
+        }
+        $.post("/Approve/ApproveSMSTopUp", { mobile: $("#txtSalesMobile").val(), smsamount: $("#txtSmsAmount").val(), whatsappamount: $("#txtWhatsAppAmount").val(),  },
+            function (response) {
+                Alert(response.result);
+            });
+    });
+
+    $('#txtSalesMobile').keypress(function (e) {
+
+        var charCode = (e.which) ? e.which : event.keyCode
+
+        if (String.fromCharCode(charCode).match(/[^0-9]/g))
+
+            return false;
+
+    }); 
+
+    $('#txtSmsAmount').keypress(function (e) {
+
+        var charCode = (e.which) ? e.which : event.keyCode
+
+        if (String.fromCharCode(charCode).match(/[^0-9]/g))
+
+            return false;
+
+    }); 
+
+
+</script>

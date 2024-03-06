@@ -1,0 +1,96 @@
+﻿@model List<SalesApplication.Models.Company>
+@{
+    ViewBag.Title = "Company Module Access";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="section_base">
+    <div class="row p-1" id="">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-12">
+                    <h3>Company Module Access</h3>
+                </div>
+                <div class="col-lg-6 col-md-12" align="right">
+                        @*<button type="button" style="float:right!important" class="btn btn-success btnEditUser" data-id="0" data-username="">+ Add</button>*@
+                    Search : <input type="text" id="search" class=""/>
+                    </div>
+            </div>
+            <table class="table table-bordered table-striped" id="tblCompanyList">
+                <thead>
+                    <tr style="font-weight:bold">
+                        <th>Company Name</th>
+                        <th style="text-align:center">Manage</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (Model != null && Model.Count() > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.CompanyName</td>
+                                <td style="text-align:center">
+                                    <button type="button" class="btn btn-warning btnManageAccess" data-id="@item.Id" data-companyname="@item.CompanyName">Manage</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="2"> No Records</td></tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</section>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script>
+    $(document).on("click", ".btnManageAccess", function () {
+        var companyid = $(this).attr("data-id");
+        window.location.href = "@Url.Action("CompanyAccessList", "ManageCompanyModuleAccess")?companyId=" + companyid;
+    });
+
+    $("#search").keyup(function () {
+        var value = $(this).val().toLowerCase();
+            $("#tblCompanyList tr").each(function (index) {
+            if (index != 0) {
+
+                $row = $(this);
+
+                var id = $row.find("td:first").text().toLowerCase();
+
+                if (id.indexOf(value) != 0) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+            }
+        });
+    });
+    //$(document).on("keyup", "#search", function () {
+    //    var value = $(this).val();
+    //    alert();
+    //    //$("#tblCompanyList tr").each(function (index) {
+    //    //    if (index != 0) {
+
+    //    //        $row = $(this);
+
+    //    //        var id = $row.find("td:first").text();
+
+    //    //        if (id.indexOf(value) != 0) {
+    //    //            $(this).hide();
+    //    //        }
+    //    //        else {
+    //    //            $(this).show();
+    //    //        }
+    //    //    }
+    //    //});
+    //});​
+</script>
+

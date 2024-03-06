@@ -1,0 +1,61 @@
+﻿
+
+
+@model List<SalesApplication.PaymentHistory>
+
+<div class="row">
+    <div class="col-md-8">
+        <section>
+           
+
+            <div class="row" style="padding-top: 15px;">
+                <div class="  col-xs-12 ">
+                    <label class="control-label"> Payment History </label>
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">SNo</th>
+                                @*<th scope="col">SMS Pack</th>*@
+                                <th scope="col">Payment Type</th>
+                                <th scope="col">Transaction Id</th>
+                                <th scope="col">Service Amount</th>
+                                <th scope="col">Created By</th>
+                                <th scope="col">Created On</th>
+                                <th scope="col">Activated Upto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null  && Model.Count() > 0)
+                            {
+                                int i = 1;
+                                foreach (var item in Model)
+                                {
+                            <tr>
+                                <td> @i  </td>
+                                @*<td> @(item.ServiceTypeName)  </td>*@
+                                <td> @item.PaidType  </td>
+                                <td> @item.TransactionId  </td>
+                                <td> @item.ServiceAmount  </td>
+                                <td> @item.CreatedByName  </td>
+                                <td> @(item.CreatedOn!=null?Convert.ToDateTime(item.CreatedOn).ToShortDateString():"--") </td>
+                                <td> @(item.ActivatedUpto!=null?Convert.ToDateTime(item.ActivatedUpto).ToShortDateString():"--") </td>
+                            </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8"> no records..</td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+</div>

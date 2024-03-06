@@ -1,0 +1,80 @@
+﻿@model SalesApplication.Models.AccessModel
+@{
+    ViewBag.Title = "Company Access List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<form method="post" action="@Url.Action("SaveCompanyAccess","ManageCompanyModuleAccess")" enctype="multipart/form-data">
+    <section class="section_base">
+        <div class="row p-1" id="">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12">
+                        <h3>Company Module Access</h3>
+                    </div>
+                    <div class="col-lg-6 col-md-12">
+                        <h3 style="float:none">Company Name : @Model.CompanyModuleAccessList[0].CompanyName</h3>
+                    </div>
+                </div>
+
+                <table class="table table-bordered table-striped" id="tblBranchList">
+                    <thead>
+                        <tr style="font-weight:bold">
+                            <th>Module</th>
+                            <th style="text-align:center">Access</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.CompanyModuleAccessList != null && Model.CompanyModuleAccessList.Count > 0)
+                        {
+                            List<string> moduleCategories = Model.CompanyModuleAccessList.Select(x => x.ModuleCategory).Distinct().ToList();
+                            if (moduleCategories != null && moduleCategories.Count() > 0)
+                            {
+                                int i = 0;
+                                foreach (var category in moduleCategories)
+                                {
+                                    <tr style="background-color:#b9ad89;text-align:center">
+                                        <td>
+                                            <b>@category</b>
+                                        </td>
+                                    </tr>
+                                    foreach (var item in Model.CompanyModuleAccessList.Where(x => x.ModuleCategory == category).ToList())
+                                    {
+                                        <tr>
+                                            <td>@item.ModuleName</td>
+                                            <td style="text-align:center">
+                                                <input type="hidden" value="@item.Id" name="Model.CompanyModuleAccessList[@i].Id" />
+                                                <input type="hidden" value="@item.CompanyId" name="Model.CompanyModuleAccessList[@i].CompanyId" />
+                                                <input type="hidden" value="@item.CompanyName" name="Model.CompanyModuleAccessList[@i].CompanyName" />
+                                                <input type="hidden" value="@item.ModuleId" name="Model.CompanyModuleAccessList[@i].ModuleId" />
+                                                <input type="hidden" value="@item.ModuleName" name="Model.CompanyModuleAccessList[@i].ModuleName" />
+                                                <input type="checkbox" value="true" @(item.IsHavingAccess == true ? "checked" : "") name="Model.CompanyModuleAccessList[@i].IsHavingAccess" />
+                                            </td>
+                                        </tr>
+                                        i++;
+                                    }
+
+                                }
+                            }
+
+
+
+
+
+
+
+                        }
+                    </tbody>
+                </table>
+                <div class="" align="center">
+                    
+                    <input type="submit" class="btn btn-warning col-lg-4" value="Save" />
+                </div>
+            </div>
+            
+        </div>
+    </section>
+</form>
+
+
